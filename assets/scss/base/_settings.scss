@@ -1,0 +1,78 @@
+/*-----------------------------------------------------------------------------
+ *-----------------------------------------------------------------------------
+ *
+ * BASE SETTINGS
+ *
+ * The settings defined in this file should be updated per project. Any
+ * custom global variables needed for the project should be defined in
+ * utils/variables.scss
+ *
+ *-----------------------------------------------------------------------------
+ *----------------------------------------------------------------------------- */
+
+
+/*-------------------------------------------- */
+/** File Path Settings */
+/*-------------------------------------------- */
+
+$img-base-path: '../img';
+$font-base-path: '../font';
+
+
+/*-------------------------------------------- */
+/** Layout Settings */
+/*-------------------------------------------- */
+
+$is-responsive: true;
+$page-container-width: 1140px;
+$page-container-padding: 20px;
+
+
+/*-------------------------------------------- */
+/** Typography Settings */
+/*-------------------------------------------- */
+
+$em-base: 16px;
+$base-font-size: $em-base;
+$base-line-height: 1.4;
+
+$light-font-weight: 200;
+$base-font-weight: 400;
+$bold-font-weight: 700;
+
+$paragraph-margin: 20px;
+
+$h1-font-size: 40;
+$h2-font-size: 32;
+$h3-font-size: 24;
+$h4-font-size: 20;
+$h5-font-size: 16;
+$h6-font-size: 16;
+
+
+/*-------------------------------------------- */
+/** Color Settings */
+/*-------------------------------------------- */
+
+$body-bg-color: #fff;
+$body-font-color: #444444;
+$page-container-bg-color: $body-bg-color;
+
+$link-color: limegreen;
+$link-color-hover: limegreen;
+$link-color-active: limegreen;
+
+$h1-font-color: $body-font-color;
+$h2-font-color: $body-font-color;
+$h3-font-color: $body-font-color;
+$h4-font-color: $body-font-color;
+$h5-font-color: $body-font-color;
+$h6-font-color: $body-font-color;
+
+
+/*-------------------------------------------- */
+/** Common Library variables */
+/*-------------------------------------------- */
+
+$primary-btn-bg: limegreen;
+$secondary-btn-bg: limegreen;

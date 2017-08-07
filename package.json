@@ -1,0 +1,28 @@
+{
+  "name": "pumpkin-spice-season",
+  "version": "0.0.0",
+  "description": "Made by ETR",
+  "main": "Gruntfile.js",
+  "scripts": {},
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-sass": "^1.0.0",
+    "grunt-browser-sync": "^2.2.0",
+    "grunt-webpack": "^1.0.0",
+    "grunt-postcss": "~0.8.0",
+    "grunt-svg-sprite": "^1.2.19",
+    "load-grunt-config": "~0.19.0",
+    "babel-core": "^6.14.0",
+    "babel-loader": "^6.2.5",
+    "babel-preset-es2015": "^6.14.0",
+    "autoprefixer": "^6.3.4",
+    "webpack": "^1.12.0",
+    "inquirer": "~0.8.5",
+    "lodash": "^4.8.2"
+  },
+  "dependencies": {
+    "jquery": "^3.2.1",
+    "svg4everybody": "^2.0.3"
+  }
+}

@@ -1,0 +1,56 @@
+/*-----------------------------------------------------------------------------
+ *-----------------------------------------------------------------------------
+ *
+ * MIXINS
+ *
+ * Define any custom site-wide mixins below. These should only be
+ * mixins that are global in scope and that need to be referenced
+ * by multiple SASS files.
+ *
+ *-----------------------------------------------------------------------------
+ *----------------------------------------------------------------------------- */
+
+/**
+ * Basic Clearfix - pulled from Bourbon.io
+ */
+@mixin clearfix {
+    &:after {
+        clear: both;
+        content: "";
+        display: table;
+    }
+}
+
+/**
+ * Vertical Centering
+ * $position: variable to set position value, Defaults to relative.
+ *
+ */
+@mixin vertically-centered($position: relative) {
+    position: $position;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/**
+ * Creates an intrinsic ratio container. Useful for videos and elements that
+ * you want to scale proportionately.
+ *
+ * @type {string} $child-selector A string selector targeting the child element that
+ *                                 you want to scale
+ * @type {int} $width The width component of the aspect ratio
+ * @type {int} $height The height component of the aspect ratio
+ */
+@mixin intrinsic-ratio($child-selector, $width: 16, $height: 9) {
+    position: relative;
+    height: 0;
+    padding-bottom: percentage($height / $width);
+
+    #{$child-selector} {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+}

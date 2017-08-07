@@ -1,0 +1,27 @@
+/*-----------------------------------------------------------------------------
+ *-----------------------------------------------------------------------------
+ *
+ * LAYOUT
+ *
+ * Major layout container components (i.e. header, main content containers,
+ * footer, sidebar/aside)
+ *
+ *-----------------------------------------------------------------------------
+ *----------------------------------------------------------------------------- */
+
+/**
+ * Apply to the element that will be the outmost container of site content to
+ * contain the width to $page-container-width
+ */
+.page-container {
+    @if $is-responsive {
+        max-width: $page-container-width;
+    } @else {
+        width: $page-container-width;
+    }
+
+    margin: 0 auto;
+    padding-right: $page-container-padding;
+    padding-left: $page-container-padding;
+    background: $page-container-bg-color;
+}

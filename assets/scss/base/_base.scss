@@ -1,0 +1,83 @@
+/*-----------------------------------------------------------------------------
+ *-----------------------------------------------------------------------------
+ *
+ * BASE
+ *
+ * Global element styles only (i.e. h1-h6, p, a, ul, li)
+ *
+ *-----------------------------------------------------------------------------
+ *----------------------------------------------------------------------------- */
+
+html,
+body {
+    font-size: $base-font-size;
+}
+
+body {
+    background: $body-bg-color;
+    color: $body-font-color;
+    font-weight: $base-font-weight;
+    line-height: $base-line-height;
+}
+
+h1,
+.h1 {
+    color: $h1-font-color;
+    font-size: rem($h1-font-size);
+    font-weight: $bold-font-weight;
+}
+
+h2,
+.h2 {
+    color: $h2-font-color;
+    font-size: rem($h2-font-size);
+    font-weight: $bold-font-weight;
+}
+
+h3,
+.h3 {
+    color: $h3-font-color;
+    font-size: rem($h3-font-size);
+    font-weight: $bold-font-weight;
+}
+
+h4,
+.h4 {
+    color: $h4-font-color;
+    font-size: rem($h4-font-size);
+    font-weight: $bold-font-weight;
+}
+
+h5,
+.h5 {
+    color: $h5-font-color;
+    font-size: rem($h5-font-size);
+    font-weight: $bold-font-weight;
+}
+
+h6,
+.h6 {
+    color: $h6-font-color;
+    font-size: rem($h6-font-size);
+    font-weight: $bold-font-weight;
+}
+
+p {
+    margin-bottom: $paragraph-margin;
+}
+
+a {
+    color: $link-color;
+
+    &:hover {
+        color: $link-color-hover;
+    }
+
+    &.active {
+        color: $link-color-active;
+    }
+}
+
+strong {
+    font-weight: $bold-font-weight;
+}

@@ -1,0 +1,68 @@
+/*-----------------------------------------------------------------------------
+ *-----------------------------------------------------------------------------
+ *
+ * FUNCTIONS
+ *
+ * Define any custom site-wide functions below. These should only be
+ * functions that are global in scope and that need to be referenced
+ * by multiple SASS files.
+ *
+ *-----------------------------------------------------------------------------
+ *----------------------------------------------------------------------------- */
+
+/**
+ * Strip Units from values.
+ * Mostly used by other functions
+ */
+@function strip-units($value) {
+    @return ($value / ($value * 0 + 1));
+}
+
+/**
+ * Pixels to REMs
+ */
+@function rem($pxval) {
+    @if not unitless($pxval) {
+        $pxval: strip-units($pxval);
+    }
+
+    $base: $em-base;
+    @if not unitless($base) {
+        $base: strip-units($base);
+    }
+    @return ($pxval / $base) * 1rem;
+}
+
+/**
+ * Return colors from $color map
+ */
+@function color($color, $variation: null, $color-map: $colors) {
+    $has-color-or-group: map-has-key($color-map, $color);
+
+    @if $variation {
+
+        @if $has-color-or-group {
+            $has-color-variation: map-has-key(map-get($color-map, $color), $variation);
+            $color-group: map-get($color-map, $color);
+
+            @if $has-color-variation {
+
+                @return map-get(map-get($color-map, $color), $variation);
+
+            } @else {
+                @error "The color vartiation #{$variation} does not exist.";
+            }
+
+        } @else {
+            @error "The color group #{$color} does not exist.";
+        }
+
+    } @else {
+
+        @if $has-color-or-group {
+            @return map-get($color-map, $color);
+        } @else {
+            @error "The color #{$color} does not exist";
+        }
+    }
+}

@@ -1,0 +1,45 @@
+/*-----------------------------------------------------------------------------
+ *-----------------------------------------------------------------------------
+ *
+ * BREAKPOINTS
+ *
+ * Define all breakpoint variables below. Breakpoint is included as a vendor
+ * library: http://breakpoint-sass.com/. All media queries should make use of
+ * the @include respond-to('<string>') mixin and reference the breakpoint string
+ * names defined in this file. When coding a responsive site, m
+ * obile first CSS should be used.
+ *
+ * See http://www.zell-weekeat.com/how-to-write-mobile-first-css/.
+ *
+ *-----------------------------------------------------------------------------
+ *----------------------------------------------------------------------------- */
+
+// Change these values as needed
+$breakpoints-map: (
+    small: 700px,
+    medium: 980px,
+    large: 1280px,
+    xlarge: 1400px
+);
+
+$breakpoints: add-breakpoint('small and up',    map-get($breakpoints-map, small));
+$breakpoints: add-breakpoint('medium and up',   map-get($breakpoints-map, medium));
+$breakpoints: add-breakpoint('large and up',    map-get($breakpoints-map, large));
+$breakpoints: add-breakpoint('xlarge and up',   map-get($breakpoints-map, xlarge));
+
+$breakpoints: add-breakpoint('up to small',     max-width map-get($breakpoints-map, small) - 1px);
+$breakpoints: add-breakpoint('up to medium',    max-width map-get($breakpoints-map, medium) - 1px);
+$breakpoints: add-breakpoint('up to large',     max-width map-get($breakpoints-map, large) - 1px);
+$breakpoints: add-breakpoint('up to xlarge',    max-width map-get($breakpoints-map, xlarge) - 1px);
+
+$breakpoints: add-breakpoint('between small and medium',
+                              map-get($breakpoints-map, small)
+                              map-get($breakpoints-map, medium));
+$breakpoints: add-breakpoint('between medium and large',
+                              map-get($breakpoints-map, medium)
+                              map-get($breakpoints-map, large));
+$breakpoints: add-breakpoint('between large and xlarge',
+                              map-get($breakpoints-map, large)
+                              map-get($breakpoints-map, xlarge));
+
+// Other arbitrary breakpoints can be added for specific viewport sizes/scenarios

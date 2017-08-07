@@ -1,0 +1,707 @@
+/*-----------------------------------------------------------------------------
+ *-----------------------------------------------------------------------------
+ *
+ * MAIN
+ *
+ * This file is reserved for @imports only. It should rarely need to be updated.
+ *
+ *-----------------------------------------------------------------------------
+ *----------------------------------------------------------------------------- */
+/*-------------------------------------------- */
+/** Vendor */
+/*-------------------------------------------- */
+/*-------------------------------------------- */
+/** Utils */
+/*-------------------------------------------- */
+/*-----------------------------------------------------------------------------
+ *-----------------------------------------------------------------------------
+ *
+ * VARIABLES
+ * 
+ * Define any custom site-wide variables below. These should only be 
+ * variables that are global in scope and that need to be referenced 
+ * by multiple SASS files.
+ *
+ *-----------------------------------------------------------------------------
+ *----------------------------------------------------------------------------- */
+/*-----------------------------------------------------------------------------
+ *-----------------------------------------------------------------------------
+ *
+ * FUNCTIONS
+ *
+ * Define any custom site-wide functions below. These should only be
+ * functions that are global in scope and that need to be referenced
+ * by multiple SASS files.
+ *
+ *-----------------------------------------------------------------------------
+ *----------------------------------------------------------------------------- */
+/**
+ * Strip Units from values.
+ * Mostly used by other functions
+ */
+/**
+ * Pixels to REMs
+ */
+/**
+ * Return colors from $color map
+ */
+/*-----------------------------------------------------------------------------
+ *-----------------------------------------------------------------------------
+ *
+ * MIXINS
+ *
+ * Define any custom site-wide mixins below. These should only be
+ * mixins that are global in scope and that need to be referenced
+ * by multiple SASS files.
+ *
+ *-----------------------------------------------------------------------------
+ *----------------------------------------------------------------------------- */
+/**
+ * Basic Clearfix - pulled from Bourbon.io
+ */
+/**
+ * Vertical Centering
+ * $position: variable to set position value, Defaults to relative.
+ *
+ */
+/**
+ * Creates an intrinsic ratio container. Useful for videos and elements that
+ * you want to scale proportionately.
+ *
+ * @type {string} $child-selector A string selector targeting the child element that
+ *                                 you want to scale
+ * @type {int} $width The width component of the aspect ratio
+ * @type {int} $height The height component of the aspect ratio
+ */
+/*-------------------------------------------- */
+/** Base */
+/*-------------------------------------------- */
+/*-----------------------------------------------------------------------------
+ *----------------------------------------------------------------------------- 
+ *
+ * Z-INDEX DEFINITIONS
+ * 
+ * Use the z-index variables below instead of hard coded values.
+ *
+ *-----------------------------------------------------------------------------
+ *----------------------------------------------------------------------------- */
+/*-----------------------------------------------------------------------------
+ *-----------------------------------------------------------------------------
+ *
+ * FONT FACE
+ * 
+ * Define any @font-face declarations below. 
+ *
+ *-----------------------------------------------------------------------------
+ *----------------------------------------------------------------------------- */
+/*-----------------------------------------------------------------------------
+ *-----------------------------------------------------------------------------
+ *
+ * COLORS
+ *
+ * Define any global color variables below. Ideally color variables should be
+ * referenced by the theme variables that follow.
+ *
+ *-----------------------------------------------------------------------------
+ *----------------------------------------------------------------------------- */
+/*-------------------------------------------- */
+/** Theme Variables */
+/*-------------------------------------------- */
+/*-----------------------------------------------------------------------------
+ *-----------------------------------------------------------------------------
+ *
+ * BASE SETTINGS
+ *
+ * The settings defined in this file should be updated per project. Any
+ * custom global variables needed for the project should be defined in
+ * utils/variables.scss
+ *
+ *-----------------------------------------------------------------------------
+ *----------------------------------------------------------------------------- */
+/*-------------------------------------------- */
+/** File Path Settings */
+/*-------------------------------------------- */
+/*-------------------------------------------- */
+/** Layout Settings */
+/*-------------------------------------------- */
+/*-------------------------------------------- */
+/** Typography Settings */
+/*-------------------------------------------- */
+/*-------------------------------------------- */
+/** Color Settings */
+/*-------------------------------------------- */
+/*-------------------------------------------- */
+/** Common Library variables */
+/*-------------------------------------------- */
+/*-----------------------------------------------------------------------------
+ *-----------------------------------------------------------------------------
+ *
+ * BREAKPOINTS
+ *
+ * Define all breakpoint variables below. Breakpoint is included as a vendor
+ * library: http://breakpoint-sass.com/. All media queries should make use of
+ * the @include respond-to('<string>') mixin and reference the breakpoint string
+ * names defined in this file. When coding a responsive site, m
+ * obile first CSS should be used.
+ *
+ * See http://www.zell-weekeat.com/how-to-write-mobile-first-css/.
+ *
+ *-----------------------------------------------------------------------------
+ *----------------------------------------------------------------------------- */
+/*! normalize.css v4.0.0 | MIT License | github.com/necolas/normalize.css */
+/**
+ * 1. Change the default font family in all browsers (opinionated).
+ * 2. Prevent adjustments of font size after orientation changes in IE and iOS.
+ */
+html {
+  font-family: sans-serif;
+  /* 1 */
+  -ms-text-size-adjust: 100%;
+  /* 2 */
+  -webkit-text-size-adjust: 100%;
+  /* 2 */ }
+
+/**
+ * Remove the margin in all browsers (opinionated).
+ */
+body {
+  margin: 0; }
+
+/* HTML5 display definitions
+   ========================================================================== */
+/**
+ * Add the correct display in IE 9-.
+ * 1. Add the correct display in Edge, IE, and Firefox.
+ * 2. Add the correct display in IE.
+ */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+main,
+menu,
+nav,
+section,
+summary {
+  /* 1 */
+  display: block; }
+
+/**
+ * Add the correct display in IE 9-.
+ */
+audio,
+canvas,
+progress,
+video {
+  display: inline-block; }
+
+/**
+ * Add the correct display in iOS 4-7.
+ */
+audio:not([controls]) {
+  display: none;
+  height: 0; }
+
+/**
+ * Add the correct vertical alignment in Chrome, Firefox, and Opera.
+ */
+progress {
+  vertical-align: baseline; }
+
+/**
+ * Add the correct display in IE 10-.
+ * 1. Add the correct display in IE.
+ */
+template,
+[hidden] {
+  display: none; }
+
+/* Links
+   ========================================================================== */
+/**
+ * Remove the gray background on active links in IE 10.
+ */
+a {
+  background-color: transparent; }
+
+/**
+ * Remove the outline on focused links when they are also active or hovered
+ * in all browsers (opinionated).
+ */
+a:active,
+a:hover {
+  outline-width: 0; }
+
+/* Text-level semantics
+   ========================================================================== */
+/**
+ * 1. Remove the bottom border in Firefox 39-.
+ * 2. Add the correct text decoration in Chrome, Edge, IE, Opera, and Safari.
+ */
+abbr[title] {
+  border-bottom: none;
+  /* 1 */
+  text-decoration: underline;
+  /* 2 */
+  text-decoration: underline dotted;
+  /* 2 */ }
+
+/**
+ * Prevent the duplicate application of `bolder` by the next rule in Safari 6.
+ */
+b,
+strong {
+  font-weight: inherit; }
+
+/**
+ * Add the correct font weight in Chrome, Edge, and Safari.
+ */
+b,
+strong {
+  font-weight: bolder; }
+
+/**
+ * Add the correct font style in Android 4.3-.
+ */
+dfn {
+  font-style: italic; }
+
+/**
+ * Correct the font size and margin on `h1` elements within `section` and
+ * `article` contexts in Chrome, Firefox, and Safari.
+ */
+h1 {
+  font-size: 2em;
+  margin: 0.67em 0; }
+
+/**
+ * Add the correct background and color in IE 9-.
+ */
+mark {
+  background-color: #ff0;
+  color: #000; }
+
+/**
+ * Add the correct font size in all browsers.
+ */
+small {
+  font-size: 80%; }
+
+/**
+ * Prevent `sub` and `sup` elements from affecting the line height in
+ * all browsers.
+ */
+sub,
+sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline; }
+
+sub {
+  bottom: -0.25em; }
+
+sup {
+  top: -0.5em; }
+
+/* Embedded content
+   ========================================================================== */
+/**
+ * Remove the border on images inside links in IE 10-.
+ */
+img {
+  border-style: none; }
+
+/**
+ * Hide the overflow in IE.
+ */
+svg:not(:root) {
+  overflow: hidden; }
+
+/* Grouping content
+   ========================================================================== */
+/**
+ * 1. Correct the inheritance and scaling of font size in all browsers.
+ * 2. Correct the odd `em` font sizing in all browsers.
+ */
+code,
+kbd,
+pre,
+samp {
+  font-family: monospace, monospace;
+  /* 1 */
+  font-size: 1em;
+  /* 2 */ }
+
+/**
+ * Add the correct margin in IE 8.
+ */
+figure {
+  margin: 1em 40px; }
+
+/**
+ * 1. Add the correct box sizing in Firefox.
+ * 2. Show the overflow in Edge and IE.
+ */
+hr {
+  box-sizing: content-box;
+  /* 1 */
+  height: 0;
+  /* 1 */
+  overflow: visible;
+  /* 2 */ }
+
+/* Forms
+   ========================================================================== */
+/**
+ * Change font properties to `inherit` in all browsers (opinionated).
+ */
+button,
+input,
+select,
+textarea {
+  font: inherit; }
+
+/**
+ * Restore the font weight unset by the previous rule.
+ */
+optgroup {
+  font-weight: bold; }
+
+/**
+ * Show the overflow in IE.
+ * 1. Show the overflow in Edge.
+ * 2. Show the overflow in Edge, Firefox, and IE.
+ */
+button,
+input,
+select {
+  /* 2 */
+  overflow: visible; }
+
+/**
+ * Remove the margin in Safari.
+ * 1. Remove the margin in Firefox and Safari.
+ */
+button,
+input,
+select,
+textarea {
+  /* 1 */
+  margin: 0; }
+
+/**
+ * Remove the inheritence of text transform in Edge, Firefox, and IE.
+ * 1. Remove the inheritence of text transform in Firefox.
+ */
+button,
+select {
+  /* 1 */
+  text-transform: none; }
+
+/**
+ * Change the cursor in all browsers (opinionated).
+ */
+button,
+[type="button"],
+[type="reset"],
+[type="submit"] {
+  cursor: pointer; }
+
+/**
+ * Restore the default cursor to disabled elements unset by the previous rule.
+ */
+[disabled] {
+  cursor: default; }
+
+/**
+ * 1. Prevent a WebKit bug where (2) destroys native `audio` and `video`
+ *    controls in Android 4.
+ * 2. Correct the inability to style clickable types in iOS.
+ */
+button,
+html [type="button"],
+[type="reset"],
+[type="submit"] {
+  -webkit-appearance: button;
+  /* 2 */ }
+
+/**
+ * Remove the inner border and padding in Firefox.
+ */
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+  border: 0;
+  padding: 0; }
+
+/**
+ * Restore the focus styles unset by the previous rule.
+ */
+button:-moz-focusring,
+input:-moz-focusring {
+  outline: 1px dotted ButtonText; }
+
+/**
+ * Change the border, margin, and padding in all browsers (opinionated).
+ */
+fieldset {
+  border: 1px solid #c0c0c0;
+  margin: 0 2px;
+  padding: 0.35em 0.625em 0.75em; }
+
+/**
+ * 1. Correct the text wrapping in Edge and IE.
+ * 2. Correct the color inheritance from `fieldset` elements in IE.
+ * 3. Remove the padding so developers are not caught out when they zero out
+ *    `fieldset` elements in all browsers.
+ */
+legend {
+  box-sizing: border-box;
+  /* 1 */
+  color: inherit;
+  /* 2 */
+  display: table;
+  /* 1 */
+  max-width: 100%;
+  /* 1 */
+  padding: 0;
+  /* 3 */
+  white-space: normal;
+  /* 1 */ }
+
+/**
+ * Remove the default vertical scrollbar in IE.
+ */
+textarea {
+  overflow: auto; }
+
+/**
+ * 1. Add the correct box sizing in IE 10-.
+ * 2. Remove the padding in IE 10-.
+ */
+[type="checkbox"],
+[type="radio"] {
+  box-sizing: border-box;
+  /* 1 */
+  padding: 0;
+  /* 2 */ }
+
+/**
+ * Correct the cursor style of increment and decrement buttons in Chrome.
+ */
+[type="number"]::-webkit-inner-spin-button,
+[type="number"]::-webkit-outer-spin-button {
+  height: auto; }
+
+/**
+ * Correct the odd appearance of search inputs in Chrome and Safari.
+ */
+[type="search"] {
+  -webkit-appearance: textfield; }
+
+/**
+ * Remove the inner padding and cancel buttons in Chrome on OS X and
+ * Safari on OS X.
+ */
+[type="search"]::-webkit-search-cancel-button,
+[type="search"]::-webkit-search-decoration {
+  -webkit-appearance: none; }
+
+/*-----------------------------------------------------------------------------
+ *-----------------------------------------------------------------------------
+ *
+ * BASE
+ *
+ * Global element styles only (i.e. h1-h6, p, a, ul, li)
+ *
+ *-----------------------------------------------------------------------------
+ *----------------------------------------------------------------------------- */
+html,
+body {
+  font-size: 16px; }
+
+body {
+  background: #fff;
+  color: #444444;
+  font-weight: 400;
+  line-height: 1.4; }
+
+h1,
+.h1 {
+  color: #444444;
+  font-size: 2.5rem;
+  font-weight: 700; }
+
+h2,
+.h2 {
+  color: #444444;
+  font-size: 2rem;
+  font-weight: 700; }
+
+h3,
+.h3 {
+  color: #444444;
+  font-size: 1.5rem;
+  font-weight: 700; }
+
+h4,
+.h4 {
+  color: #444444;
+  font-size: 1.25rem;
+  font-weight: 700; }
+
+h5,
+.h5 {
+  color: #444444;
+  font-size: 1rem;
+  font-weight: 700; }
+
+h6,
+.h6 {
+  color: #444444;
+  font-size: 1rem;
+  font-weight: 700; }
+
+p {
+  margin-bottom: 20px; }
+
+a {
+  color: limegreen; }
+  a:hover {
+    color: limegreen; }
+  a.active {
+    color: limegreen; }
+
+strong {
+  font-weight: 700; }
+
+/*-----------------------------------------------------------------------------
+ *-----------------------------------------------------------------------------
+ *
+ * HELPERS
+ *
+ * Define any custom site-wide helper classes below. Utility classes such as
+ * .centered or .hidden are good candidates to live in this file.
+ *
+ *-----------------------------------------------------------------------------
+ *----------------------------------------------------------------------------- */
+/**
+ * Responsive Visibility
+ */
+[class*="show-at"] {
+  display: none; }
+
+@media (min-width: 700px) {
+  .hide-at-small {
+    display: none; }
+  .show-at-small {
+    display: block; } }
+
+@media (min-width: 980px) {
+  .hide-at-medium {
+    display: none; }
+  .show-at-medium {
+    display: block; } }
+
+@media (min-width: 1280px) {
+  .hide-at-large {
+    display: none; }
+  .show-at-large {
+    display: block; } }
+
+@media (min-width: 1400px) {
+  .hide-at-xlarge {
+    display: none; }
+  .show-at-xlarge {
+    display: block; } }
+
+.hide-text {
+  text-indent: 100%;
+  white-space: nowrap;
+  overflow: hidden; }
+
+.clearfix:after {
+  clear: both;
+  content: "";
+  display: table; }
+
+.text-center {
+  text-align: center; }
+
+.text-upper {
+  text-transform: uppercase; }
+
+.huge {
+  font-size: 6.25rem; }
+  @media (min-width: 700px) {
+    .huge {
+      font-size: 12.5rem; } }
+
+.nope {
+  color: red; }
+
+.yup {
+  color: green; }
+
+/*-------------------------------------------- */
+/** Layout */
+/*-------------------------------------------- */
+/*-----------------------------------------------------------------------------
+ *-----------------------------------------------------------------------------
+ *
+ * LAYOUT
+ *
+ * Major layout container components (i.e. header, main content containers,
+ * footer, sidebar/aside)
+ *
+ *-----------------------------------------------------------------------------
+ *----------------------------------------------------------------------------- */
+/**
+ * Apply to the element that will be the outmost container of site content to
+ * contain the width to $page-container-width
+ */
+.page-container {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding-right: 20px;
+  padding-left: 20px;
+  background: #fff; }
+
+/*-----------------------------------------------------------------------------
+ *-----------------------------------------------------------------------------
+ *
+ * LAYOUT
+ * 
+ * Import all layout specific SASS files below. This file is imported 
+ * by main.scss.
+ *
+ *-----------------------------------------------------------------------------
+ *----------------------------------------------------------------------------- */
+/*-------------------------------------------- */
+/** Modules */
+/*-------------------------------------------- */
+/*-----------------------------------------------------------------------------
+ *-----------------------------------------------------------------------------
+ *
+ * MODULES
+ *
+ * Import all module SASS files below. This file is imported by main.scss.
+ *
+ *-----------------------------------------------------------------------------
+ *----------------------------------------------------------------------------- */
+/*-------------------------------------------- */
+/** Pages */
+/*-------------------------------------------- */
+/*-----------------------------------------------------------------------------
+ *-----------------------------------------------------------------------------
+ *
+ * PAGES
+ *
+ * Import all page specific SASS files below. This file is imported by main.scss.
+ *
+ *-----------------------------------------------------------------------------
+ *----------------------------------------------------------------------------- */
+/*# sourceMappingURL=main.css.map */
