@@ -709,6 +709,9 @@ strong {
   min-height: 500px;
   height: 100vh;
   width: 100%; }
+  @media (min-width: 700px) {
+    .map {
+      height: 50vh; } }
 
 /*-------------------------------------------- */
 /** Layout */

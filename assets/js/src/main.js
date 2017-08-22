@@ -6,6 +6,7 @@ const localStorage = window.localStorage;
 
 const isItPSLSeason = $('body').data('season');
 const yupOrNope = isItPSLSeason ? 'yup' : 'nope';
+
 $('document').ready(function() {
     const $text = $('.main-text');
 
@@ -17,8 +18,12 @@ $('document').ready(function() {
         $map.insertAfter($('.page-container'));
     }
 
-    if (localStorage.getItem('pos') && isItPSLSeason) {
+    if ( isItPSLSeason ) {
         addMapToDOM();
+    }
+
+    if (localStorage.getItem('pos') && isItPSLSeason) {
+
         initMap(JSON.parse(localStorage.getItem('pos')));
 
     } else {
@@ -34,7 +39,6 @@ $('document').ready(function() {
                 localStorage.setItem('pos', JSON.stringify(coords));
 
                 if (isItPSLSeason) {
-                    addMapToDOM();
                     initMap(coords);
                 }
     
@@ -54,6 +58,7 @@ $('document').ready(function() {
 let map;
 let service;
 let infowindow;
+let mapDidRun = false;
 
 const searchCallback = (results, status) => {
     if (status === google.maps.places.PlacesServiceStatus.OK) {
@@ -124,9 +129,12 @@ const initMap = (coords) => {
     radius: 500,
     name: 'Starbucks',
     }, searchCallback);
+
+    mapDidRun = true;
 }  
 
 const recenterMap = () => {
+    if (!mapDidRun) return false;
     let center = map.getCenter();
     google.maps.event.trigger(map, "resize");
     map.setCenter(center); 
