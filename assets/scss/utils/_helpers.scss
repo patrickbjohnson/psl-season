@@ -52,10 +52,13 @@
 }
 
 .huge {
-    font-size: rem(100);
+    margin-top: 50px;
+    margin-bottom: 50px;
+    font-size: rem(125);
 
     @include respond-to('small and up') {
-        font-size: rem(200);
+        font-size: rem(225);
+
     }
 }
 
@@ -65,4 +68,75 @@
 
 .yup {
     color: green;
+}
+
+.store-wrap {
+    text-align: left;
+}
+
+.small-text {
+    font-size: rem(11);
+    font-weight: bold;
+    text-transform: capitalize;
+    margin-bottom: 3px;
+}
+
+.open {
+    color: green;
+}
+
+.closed {
+    color: red;
+}
+
+.name {
+    font-size: rem(14);
+    font-weight: bold;
+    margin-bottom: 3px;
+}
+
+.address {
+    font-size: 13px;
+}
+
+.hours {
+    padding-left: 0;
+    margin-bottom: 0;
+
+    li {
+        font-size: rem(12);
+    }
+
+    li + li {
+        margin-top: 3px;
+        
+    }
+}
+
+.flex-center-all {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    > * {
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+}
+
+.footer {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    background-color: #222;
+}
+
+.creds {
+    padding-top: 15px;
+    
+    color: #D3D3D3;
+    font-size: rem(12);
+
+    a {
+        color: #D3D3D3;
+    }
 }

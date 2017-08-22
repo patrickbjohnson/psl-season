@@ -94,6 +94,9 @@
  *
  *-----------------------------------------------------------------------------
  *----------------------------------------------------------------------------- */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"; }
+
 /*-----------------------------------------------------------------------------
  *-----------------------------------------------------------------------------
  *
@@ -635,16 +638,72 @@ strong {
   text-transform: uppercase; }
 
 .huge {
-  font-size: 6.25rem; }
+  margin-top: 50px;
+  margin-bottom: 50px;
+  font-size: 7.8125rem; }
   @media (min-width: 700px) {
     .huge {
-      font-size: 12.5rem; } }
+      font-size: 14.0625rem; } }
 
 .nope {
   color: red; }
 
 .yup {
   color: green; }
+
+.store-wrap {
+  text-align: left; }
+
+.small-text {
+  font-size: 0.6875rem;
+  font-weight: bold;
+  text-transform: capitalize;
+  margin-bottom: 3px; }
+
+.open {
+  color: green; }
+
+.closed {
+  color: red; }
+
+.name {
+  font-size: 0.875rem;
+  font-weight: bold;
+  margin-bottom: 3px; }
+
+.address {
+  font-size: 13px; }
+
+.hours {
+  padding-left: 0;
+  margin-bottom: 0; }
+  .hours li {
+    font-size: 0.75rem; }
+  .hours li + li {
+    margin-top: 3px; }
+
+.flex-center-all {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: center;
+      align-items: center;
+  -ms-flex-pack: center;
+      justify-content: center; }
+  .flex-center-all > * {
+    margin-left: 5px;
+    margin-right: 5px; }
+
+.footer {
+  padding-top: 15px;
+  padding-bottom: 15px;
+  background-color: #222; }
+
+.creds {
+  padding-top: 15px;
+  color: #D3D3D3;
+  font-size: 0.75rem; }
+  .creds a {
+    color: #D3D3D3; }
 
 /*-------------------------------------------- */
 /** Layout */

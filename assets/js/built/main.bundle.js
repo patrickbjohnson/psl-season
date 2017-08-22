@@ -52,23 +52,112 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
+	var localStorage = window.localStorage;
+	
 	(0, _jquery2.default)('document').ready(function () {
-	    console.log('ready');
+	    if (localStorage.getItem('pos')) {
 	
-	    if ('geolocation' in navigator) {
+	        console.log(JSON.parse(localStorage.getItem('pos')));
+	        initMap(JSON.parse(localStorage.getItem('pos')));
+	    } else {
+	        if ('geolocation' in navigator) {
 	
-	        var location = navigator.geolocation.getCurrentPosition(function (pos) {
-	            console.log(pos);
-	        }, function (err) {
-	            console.log(err);
-	        }, {
-	            enableHighAccuracy: true,
-	            timeout: 5000,
-	            maximumAge: 0
+	            var location = navigator.geolocation.getCurrentPosition(function (pos) {
+	
+	                var coords = {
+	                    lat: pos.coords.latitude,
+	                    lng: pos.coords.longitude
+	                };
+	
+	                initMap(coords);
+	
+	                localStorage.setItem('pos', JSON.stringify(coords));
+	            }, function (err) {
+	                console.log(err);
+	            }, {
+	                enableHighAccuracy: true,
+	                timeout: 5000,
+	                maximumAge: 0
+	            });
+	        }
+	    }
+	});
+	
+	var map = void 0;
+	var service = void 0;
+	var infowindow = void 0;
+	
+	var searchCallback = function searchCallback(results, status) {
+	    if (status === google.maps.places.PlacesServiceStatus.OK) {
+	        results.map(function (curVal, index) {
+	            createMarker(results[index]);
 	        });
 	    }
-	}); // if using SVG and you require older browser support uncomment below
-	// require('svg4everybody')();
+	};
+	
+	var createMarker = function createMarker(place) {
+	    var loc = place.geometry.location;
+	    var marker = new google.maps.Marker({
+	        map: map,
+	        position: place.geometry.location
+	    });
+	
+	    google.maps.event.addListener(marker, 'click', function () {
+	        var _this = this;
+	
+	        service.getDetails({
+	            placeId: place.place_id
+	        }, function (place, status) {
+	            infowindow.setContent(markerHTML(place));
+	            infowindow.open(map, _this);
+	        });
+	    });
+	};
+	
+	var formatHours = function formatHours(hours) {
+	    hours.map(function (currentVal) {
+	        return '<li> ' + currentVal + '</li>';
+	    });
+	};
+	
+	var markerHTML = function markerHTML(place) {
+	    var open_now = place.opening_hours.open_now ? 'open' : 'closed';
+	    return '<div class="store-wrap">\n                <div class="small-text ' + open_now + '">' + open_now + '</div>\n                <div class="name">' + place.name + ' - ' + place.rating + ' Stars</div>\n                <div class="address">' + place.formatted_address + '</div>\n                <ul class="hours">\n                    ' + place.opening_hours.weekday_text.map(function (hour) {
+	        return '<li>' + hour + '</li>';
+	    }).join('') + '\n                </ul>\n            </div>';
+	};
+	
+	var initMap = function initMap(coords) {
+	
+	    map = new google.maps.Map(document.getElementById('map'), {
+	        center: coords,
+	        zoom: 15,
+	        scrollwheel: false
+	    });
+	
+	    service = new google.maps.places.PlacesService(map);
+	    infowindow = new google.maps.InfoWindow();
+	
+	    service.nearbySearch({
+	        location: coords,
+	        radius: 500,
+	        name: 'Starbucks'
+	    }, searchCallback);
+	
+	    service.nearbySearch({
+	        location: coords,
+	        radius: 500,
+	        name: 'Starbucks'
+	    }, searchCallback);
+	};
+	
+	var recenterMap = function recenterMap() {
+	    var center = map.getCenter();
+	    google.maps.event.trigger(map, "resize");
+	    map.setCenter(center);
+	};
+	
+	google.maps.event.addDomListener(window, 'resize', recenterMap);
 
 /***/ }),
 /* 1 */
