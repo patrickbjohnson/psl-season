@@ -54,10 +54,21 @@
 	
 	var localStorage = window.localStorage;
 	
+	var isItPSLSeason = (0, _jquery2.default)('body').data('season');
+	var yupOrNope = isItPSLSeason ? 'yup' : 'nope';
 	(0, _jquery2.default)('document').ready(function () {
-	    if (localStorage.getItem('pos')) {
+	    var $text = (0, _jquery2.default)('.main-text');
 	
-	        console.log(JSON.parse(localStorage.getItem('pos')));
+	    $text.text(yupOrNope);
+	    $text.addClass(yupOrNope);
+	
+	    var addMapToDOM = function addMapToDOM() {
+	        var $map = (0, _jquery2.default)('<div></div>').addClass('map').attr('id', 'map');
+	        $map.insertAfter((0, _jquery2.default)('.page-container'));
+	    };
+	
+	    if (localStorage.getItem('pos') && isItPSLSeason) {
+	        addMapToDOM();
 	        initMap(JSON.parse(localStorage.getItem('pos')));
 	    } else {
 	        if ('geolocation' in navigator) {
@@ -69,9 +80,12 @@
 	                    lng: pos.coords.longitude
 	                };
 	
-	                initMap(coords);
-	
 	                localStorage.setItem('pos', JSON.stringify(coords));
+	
+	                if (isItPSLSeason) {
+	                    addMapToDOM();
+	                    initMap(coords);
+	                }
 	            }, function (err) {
 	                console.log(err);
 	            }, {

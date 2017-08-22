@@ -696,14 +696,19 @@ strong {
 .footer {
   padding-top: 15px;
   padding-bottom: 15px;
-  background-color: #222; }
+  color: #222; }
 
 .creds {
   padding-top: 15px;
   color: #D3D3D3;
   font-size: 0.75rem; }
   .creds a {
-    color: #D3D3D3; }
+    color: #ACACAC; }
+
+.map {
+  min-height: 500px;
+  height: 100vh;
+  width: 100%; }
 
 /*-------------------------------------------- */
 /** Layout */

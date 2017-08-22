@@ -4,12 +4,22 @@ import $ from 'jquery';
 
 const localStorage = window.localStorage;
 
+const isItPSLSeason = $('body').data('season');
+const yupOrNope = isItPSLSeason ? 'yup' : 'nope';
 $('document').ready(function() {
-    if (localStorage.getItem('pos')) {
+    const $text = $('.main-text');
 
-        console.log(JSON.parse(localStorage.getItem('pos')));
+    $text.text(yupOrNope);
+    $text.addClass(yupOrNope);
+
+    const addMapToDOM = () => {
+        const $map = $('<div></div>').addClass('map').attr('id', 'map');
+        $map.insertAfter($('.page-container'));
+    }
+
+    if (localStorage.getItem('pos') && isItPSLSeason) {
+        addMapToDOM();
         initMap(JSON.parse(localStorage.getItem('pos')));
-
 
     } else {
         if ('geolocation' in navigator) {
@@ -20,10 +30,13 @@ $('document').ready(function() {
                     lat: pos.coords.latitude,
                     lng: pos.coords.longitude
                 };
-    
-                initMap(coords);
-                
+                    
                 localStorage.setItem('pos', JSON.stringify(coords));
+
+                if (isItPSLSeason) {
+                    addMapToDOM();
+                    initMap(coords);
+                }
     
             }, function(err) {
                 console.log(err);
@@ -34,10 +47,8 @@ $('document').ready(function() {
             });
         } 
     }
-
-
-
 });
+
 
 
 let map;
