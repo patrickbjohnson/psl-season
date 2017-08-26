@@ -77,7 +77,7 @@
 	    if (localStorage.getItem('pos') && isItPSLSeason) {
 	
 	        initMap(JSON.parse(localStorage.getItem('pos')));
-	    } else {
+	    } else if (isItPSLSeason) {
 	        if ('geolocation' in navigator) {
 	
 	            var location = navigator.geolocation.getCurrentPosition(function (pos) {
@@ -123,7 +123,7 @@
 	
 	    var hereMarker = {
 	        path: 'M 0,0 C -2,-20 -10,-22 -10,-30 A 10,10 0 1,1 10,-30 C 10,-22 2,-20 0,0 z',
-	        fillColor: here ? '#3498db' : '#00704a',
+	        fillColor: here ? '#c0392b' : '#00704a',
 	        fillOpacity: 1,
 	        strokeWeight: 0,
 	        scale: 1
@@ -157,8 +157,9 @@
 	        return '<div class="store-wrap here-now"></div>\n        <div class="here text-center">You are here now.</div>\n        <p class="text-center">This might be a good time to reflect on your life choices.</p>\n    </div>';
 	    } else {
 	        var open_now = place.opening_hours.open_now ? 'yup' : 'nope';
+	        var open_now_text = place.opening_hours.open_now ? 'Open' : 'Close';
 	
-	        return '<div class="store-wrap">\n                        <div class="small-text ' + open_now + '">' + open_now + '</div>\n                        <div class="name">' + place.name + ' - ' + place.rating + ' Stars</div>\n                        <div class="address">' + place.formatted_address + '</div>\n                        <ul class="hours">\n                            ' + place.opening_hours.weekday_text.map(function (hour) {
+	        return '<div class="store-wrap">\n                        <div class="small-text ' + open_now + '">' + open_now_text + '</div>\n                        <div class="name">' + place.name + ' - ' + place.rating + ' Stars</div>\n                        <div class="address">' + place.formatted_address + '</div>\n                        <ul class="hours">\n                            ' + place.opening_hours.weekday_text.map(function (hour) {
 	            return '<li>' + hour + '</li>';
 	        }).join('') + '\n                        </ul>\n                    </div>';
 	    }

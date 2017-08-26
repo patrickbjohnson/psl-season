@@ -572,11 +572,9 @@ p {
   margin-bottom: 20px; }
 
 a {
-  color: limegreen; }
+  color: black; }
   a:hover {
-    color: limegreen; }
-  a.active {
-    color: limegreen; }
+    color: currentColor; }
 
 strong {
   font-weight: 700; }

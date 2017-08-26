@@ -67,14 +67,10 @@ p {
 }
 
 a {
-    color: $link-color;
+    color: black;
 
     &:hover {
-        color: $link-color-hover;
-    }
-
-    &.active {
-        color: $link-color-active;
+        color: currentColor;
     }
 }
 

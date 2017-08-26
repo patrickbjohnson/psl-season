@@ -28,7 +28,7 @@ $('document').ready(function() {
 
         initMap(JSON.parse(localStorage.getItem('pos')));
 
-    } else {
+    } else if (isItPSLSeason) {
         if ('geolocation' in navigator) {
             
             let location = navigator.geolocation.getCurrentPosition(function(pos) {
@@ -77,7 +77,7 @@ const createMarker = (place, youAreHere) => {
 
     const hereMarker = {
         path: 'M 0,0 C -2,-20 -10,-22 -10,-30 A 10,10 0 1,1 10,-30 C 10,-22 2,-20 0,0 z',
-        fillColor: here ? '#3498db' : '#00704a',
+        fillColor: here ? '#c0392b' : '#00704a',
         fillOpacity: 1,
         strokeWeight: 0,
         scale: 1
@@ -113,9 +113,10 @@ const markerHTML = (place, youAreHere) => {
     </div>`;
     } else {
         let open_now = place.opening_hours.open_now ? 'yup' : 'nope';
+        let open_now_text = place.opening_hours.open_now ? 'Open' : 'Close';
         
             return `<div class="store-wrap">
-                        <div class="small-text ${open_now}">${open_now}</div>
+                        <div class="small-text ${open_now}">${open_now_text}</div>
                         <div class="name">${place.name} - ${place.rating} Stars</div>
                         <div class="address">${place.formatted_address}</div>
                         <ul class="hours">
