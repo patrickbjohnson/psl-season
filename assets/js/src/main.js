@@ -14,8 +14,10 @@ $('document').ready(function() {
     $text.addClass(yupOrNope);
 
     const addMapToDOM = () => {
+        const $text = $('<h4>Your nearest PSL</h4>').addClass('text-center');
         const $map = $('<div></div>').addClass('map').attr('id', 'map');
         $map.insertAfter($('.page-container'));
+        $text.insertAfter($('.page-container'));
     }
 
     if ( isItPSLSeason ) {
@@ -62,48 +64,67 @@ let mapDidRun = false;
 
 const searchCallback = (results, status) => {
     if (status === google.maps.places.PlacesServiceStatus.OK) {
+        
         results.map((curVal, index) => {
-            createMarker(results[index]);
+            createMarker(results[index], false);
         })
     }
 }
 
-const createMarker = (place) => {
-    let loc = place.geometry.location;
+const createMarker = (place, youAreHere) => {
+
+    let here = youAreHere;
+
+    const hereMarker = {
+        path: 'M 0,0 C -2,-20 -10,-22 -10,-30 A 10,10 0 1,1 10,-30 C 10,-22 2,-20 0,0 z',
+        fillColor: here ? '#3498db' : '#00704a',
+        fillOpacity: 1,
+        strokeWeight: 0,
+        scale: 1
+      };
+
     let marker = new google.maps.Marker({
         map: map, 
-        position: place.geometry.location
+        position: here ? place : place.geometry.location,
+        icon: hereMarker
     });
 
     google.maps.event.addListener(marker, 'click', function() {
 
-        service.getDetails({
-            placeId: place.place_id
-        }, (place, status) => {
-            infowindow.setContent(markerHTML(place));
+        if (here) {
+            infowindow.setContent(markerHTML(place, here));
             infowindow.open(map, this);
-        });
+        } else {
+            service.getDetails({
+                placeId: place.place_id
+            }, (place, status) => {
+                infowindow.setContent(markerHTML(place, here));
+                infowindow.open(map, this);
+            });
+        }
     })
 };
 
-const formatHours = (hours) => {
-    hours.map(function(currentVal) {
-        return `<li> ${currentVal}</li>`;
-    });
-}
-
-const markerHTML = (place) => {
-    let open_now = place.opening_hours.open_now ? 'open' : 'closed'
-    return `<div class="store-wrap">
-                <div class="small-text ${open_now}">${open_now}</div>
-                <div class="name">${place.name} - ${place.rating} Stars</div>
-                <div class="address">${place.formatted_address}</div>
-                <ul class="hours">
-                    ${place.opening_hours.weekday_text.map( (hour) => {
-                        return `<li>${hour}</li>`;
-                    } ).join('')}
-                </ul>
-            </div>`;
+const markerHTML = (place, youAreHere) => {
+    if (youAreHere) {
+        return `<div class="store-wrap here-now"></div>
+        <div class="here text-center">You are here now.</div>
+        <p class="text-center">This might be a good time to reflect on your life choices.</p>
+    </div>`;
+    } else {
+        let open_now = place.opening_hours.open_now ? 'yup' : 'nope';
+        
+            return `<div class="store-wrap">
+                        <div class="small-text ${open_now}">${open_now}</div>
+                        <div class="name">${place.name} - ${place.rating} Stars</div>
+                        <div class="address">${place.formatted_address}</div>
+                        <ul class="hours">
+                            ${place.opening_hours.weekday_text.map( (hour) => {
+                                return `<li>${hour}</li>`;
+                            } ).join('')}
+                        </ul>
+                    </div>`;
+    }
 };
 
 
@@ -116,7 +137,10 @@ const initMap = (coords) => {
     });
 
     service = new google.maps.places.PlacesService(map);
+
     infowindow = new google.maps.InfoWindow();
+
+    let youAreHere = createMarker(coords, true);
 
     service.nearbySearch({
         location: coords, 
@@ -124,11 +148,7 @@ const initMap = (coords) => {
         name: 'Starbucks'
     }, searchCallback);
 
-    service.nearbySearch({
-    location: coords,
-    radius: 500,
-    name: 'Starbucks',
-    }, searchCallback);
+    
 
     mapDidRun = true;
 }  

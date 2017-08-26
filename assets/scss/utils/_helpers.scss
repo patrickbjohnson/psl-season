@@ -67,7 +67,7 @@
 }
 
 .yup {
-    color: green;
+    color: #00704a;
 }
 
 .store-wrap {
@@ -81,13 +81,6 @@
     margin-bottom: 3px;
 }
 
-.open {
-    color: green;
-}
-
-.closed {
-    color: red;
-}
 
 .name {
     font-size: rem(14);
@@ -149,4 +142,14 @@
     @include respond-to('small and up') {
         height: 50vh;
     }
+}
+
+.here-now {
+    padding-top: 15px;
+}
+
+.here {
+    font-size: rem(24);
+    font-weight: bold;
+    margin-bottom: 3px;
 }

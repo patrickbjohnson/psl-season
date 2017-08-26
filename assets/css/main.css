@@ -649,7 +649,7 @@ strong {
   color: red; }
 
 .yup {
-  color: green; }
+  color: #00704a; }
 
 .store-wrap {
   text-align: left; }
@@ -659,12 +659,6 @@ strong {
   font-weight: bold;
   text-transform: capitalize;
   margin-bottom: 3px; }
-
-.open {
-  color: green; }
-
-.closed {
-  color: red; }
 
 .name {
   font-size: 0.875rem;
@@ -712,6 +706,14 @@ strong {
   @media (min-width: 700px) {
     .map {
       height: 50vh; } }
+
+.here-now {
+  padding-top: 15px; }
+
+.here {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 3px; }
 
 /*-------------------------------------------- */
 /** Layout */

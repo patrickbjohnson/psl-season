@@ -64,8 +64,10 @@
 	    $text.addClass(yupOrNope);
 	
 	    var addMapToDOM = function addMapToDOM() {
+	        var $text = (0, _jquery2.default)('<h4>Your nearest PSL</h4>').addClass('text-center');
 	        var $map = (0, _jquery2.default)('<div></div>').addClass('map').attr('id', 'map');
 	        $map.insertAfter((0, _jquery2.default)('.page-container'));
+	        $text.insertAfter((0, _jquery2.default)('.page-container'));
 	    };
 	
 	    if (isItPSLSeason) {
@@ -104,45 +106,62 @@
 	var map = void 0;
 	var service = void 0;
 	var infowindow = void 0;
+	var mapDidRun = false;
 	
 	var searchCallback = function searchCallback(results, status) {
 	    if (status === google.maps.places.PlacesServiceStatus.OK) {
+	
 	        results.map(function (curVal, index) {
-	            createMarker(results[index]);
+	            createMarker(results[index], false);
 	        });
 	    }
 	};
 	
-	var createMarker = function createMarker(place) {
-	    var loc = place.geometry.location;
+	var createMarker = function createMarker(place, youAreHere) {
+	
+	    var here = youAreHere;
+	
+	    var hereMarker = {
+	        path: 'M 0,0 C -2,-20 -10,-22 -10,-30 A 10,10 0 1,1 10,-30 C 10,-22 2,-20 0,0 z',
+	        fillColor: here ? '#3498db' : '#00704a',
+	        fillOpacity: 1,
+	        strokeWeight: 0,
+	        scale: 1
+	    };
+	
 	    var marker = new google.maps.Marker({
 	        map: map,
-	        position: place.geometry.location
+	        position: here ? place : place.geometry.location,
+	        icon: hereMarker
 	    });
 	
 	    google.maps.event.addListener(marker, 'click', function () {
 	        var _this = this;
 	
-	        service.getDetails({
-	            placeId: place.place_id
-	        }, function (place, status) {
-	            infowindow.setContent(markerHTML(place));
-	            infowindow.open(map, _this);
-	        });
+	        if (here) {
+	            infowindow.setContent(markerHTML(place, here));
+	            infowindow.open(map, this);
+	        } else {
+	            service.getDetails({
+	                placeId: place.place_id
+	            }, function (place, status) {
+	                infowindow.setContent(markerHTML(place, here));
+	                infowindow.open(map, _this);
+	            });
+	        }
 	    });
 	};
 	
-	var formatHours = function formatHours(hours) {
-	    hours.map(function (currentVal) {
-	        return '<li> ' + currentVal + '</li>';
-	    });
-	};
+	var markerHTML = function markerHTML(place, youAreHere) {
+	    if (youAreHere) {
+	        return '<div class="store-wrap here-now"></div>\n        <div class="here text-center">You are here now.</div>\n        <p class="text-center">This might be a good time to reflect on your life choices.</p>\n    </div>';
+	    } else {
+	        var open_now = place.opening_hours.open_now ? 'yup' : 'nope';
 	
-	var markerHTML = function markerHTML(place) {
-	    var open_now = place.opening_hours.open_now ? 'open' : 'closed';
-	    return '<div class="store-wrap">\n                <div class="small-text ' + open_now + '">' + open_now + '</div>\n                <div class="name">' + place.name + ' - ' + place.rating + ' Stars</div>\n                <div class="address">' + place.formatted_address + '</div>\n                <ul class="hours">\n                    ' + place.opening_hours.weekday_text.map(function (hour) {
-	        return '<li>' + hour + '</li>';
-	    }).join('') + '\n                </ul>\n            </div>';
+	        return '<div class="store-wrap">\n                        <div class="small-text ' + open_now + '">' + open_now + '</div>\n                        <div class="name">' + place.name + ' - ' + place.rating + ' Stars</div>\n                        <div class="address">' + place.formatted_address + '</div>\n                        <ul class="hours">\n                            ' + place.opening_hours.weekday_text.map(function (hour) {
+	            return '<li>' + hour + '</li>';
+	        }).join('') + '\n                        </ul>\n                    </div>';
+	    }
 	};
 	
 	var initMap = function initMap(coords) {
@@ -154,22 +173,22 @@
 	    });
 	
 	    service = new google.maps.places.PlacesService(map);
+	
 	    infowindow = new google.maps.InfoWindow();
 	
-	    service.nearbySearch({
-	        location: coords,
-	        radius: 500,
-	        name: 'Starbucks'
-	    }, searchCallback);
+	    var youAreHere = createMarker(coords, true);
 	
 	    service.nearbySearch({
 	        location: coords,
 	        radius: 500,
 	        name: 'Starbucks'
 	    }, searchCallback);
+	
+	    mapDidRun = true;
 	};
 	
 	var recenterMap = function recenterMap() {
+	    if (!mapDidRun) return false;
 	    var center = map.getCenter();
 	    google.maps.event.trigger(map, "resize");
 	    map.setCenter(center);
