@@ -54,11 +54,14 @@
 .huge {
     margin-top: 50px;
     margin-bottom: 50px;
-    font-size: rem(125);
+    font-size: rem(85);
 
     @include respond-to('small and up') {
-        font-size: rem(225);
+        font-size: rem(190);
+    }
 
+    @include respond-to('medium and up') {
+        font-size: rem(225);
     }
 }
 

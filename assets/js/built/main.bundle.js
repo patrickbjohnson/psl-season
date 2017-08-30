@@ -54,30 +54,72 @@
 	
 	var localStorage = window.localStorage;
 	
-	var isItPSLSeason = (0, _jquery2.default)('body').data('season');
-	var yupOrNope = isItPSLSeason ? 'yup' : 'nope';
-	
 	(0, _jquery2.default)('document').ready(function () {
+	
+	    var isItPSLSeason = null;
 	    var $text = (0, _jquery2.default)('.main-text');
 	
-	    $text.text(yupOrNope);
+	    $text.text(yupOrNopeText);
 	    $text.addClass(yupOrNope);
 	
+	    var countDown = function countDown(endTime) {
+	
+	        var now = new Date();
+	
+	        var time = Date.parse(endTime) - Date.parse(now);
+	
+	        return {
+	            'timeLeft': time
+	        };
+	    };
+	
+	    var initClock = function initClock(time) {
+	
+	        var i = 0;
+	        var interval = setInterval(function () {
+	
+	            var clock = countDown(time);
+	
+	            console.log(clock.timeLeft <= 0);
+	
+	            if (clock.timeLeft <= 0) {
+	
+	                console.log(clock.timeLeft <= 0);
+	
+	                clearInterval(interval);
+	
+	                return isItPSLSeason = clock.timeLeft <= 0;
+	            }
+	        }, 1000);
+	    };
+	
+	    initClock('August 28 2017');
+	
+	    console.log(isItPSLSeason);
+	
+	    var yupOrNope = isItPSLSeason ? 'yup' : 'nope';
+	    var yupOrNopeText = isItPSLSeason ? 'YASSS!' : 'Not Yet';
+	
 	    var addMapToDOM = function addMapToDOM() {
-	        var $text = (0, _jquery2.default)('<h4>Your nearest PSL</h4>').addClass('text-center');
+	        var $text = (0, _jquery2.default)('<h4>Better go get you one. Here\'s your nearest PSL</h4>').addClass('text-center');
 	        var $map = (0, _jquery2.default)('<div></div>').addClass('map').attr('id', 'map');
 	        $map.insertAfter((0, _jquery2.default)('.page-container'));
 	        $text.insertAfter((0, _jquery2.default)('.page-container'));
 	    };
 	
-	    if (isItPSLSeason) {
-	        addMapToDOM();
-	    }
+	    var addCountDownToDOM = function addCountDownToDOM() {
+	        var $clockWrap = (0, _jquery2.default)('<div></div>').attr('id', 'countdown');
+	        var $clockText = (0, _jquery2.default)('<h4>But soon</h4>').addClass('medium-text');
+	
+	        $clockWrap.insertAfter('.main-text');
+	        $clockText.insertAfter('.main-text');
+	    };
 	
 	    if (localStorage.getItem('pos') && isItPSLSeason) {
 	
 	        initMap(JSON.parse(localStorage.getItem('pos')));
 	    } else if (isItPSLSeason) {
+	        console.log('yup!');
 	        if ('geolocation' in navigator) {
 	
 	            var location = navigator.geolocation.getCurrentPosition(function (pos) {
@@ -101,6 +143,8 @@
 	            });
 	        }
 	    }
+	
+	    // initClock('clock', '2017-08-30');
 	});
 	
 	var map = void 0;

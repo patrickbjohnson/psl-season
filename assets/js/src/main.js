@@ -4,31 +4,89 @@ import $ from 'jquery';
 
 const localStorage = window.localStorage;
 
-const isItPSLSeason = $('body').data('season');
-const yupOrNope = isItPSLSeason ? 'yup' : 'nope';
+
+
+
+
 
 $('document').ready(function() {
+
+    let isItPSLSeason = null;
     const $text = $('.main-text');
 
-    $text.text(yupOrNope);
+    $text.text(yupOrNopeText);
     $text.addClass(yupOrNope);
 
+
+    const countDown = (endTime) => {
+        
+        let now = new Date();
+    
+        let time = Date.parse(endTime) - Date.parse(now);
+    
+        return {
+            'timeLeft': time
+        };
+    }
+        
+    const initClock = (time) => {
+    
+        let i = 0;
+        const interval = setInterval(function() {
+    
+            let clock = countDown(time);
+    
+            console.log(clock.timeLeft <= 0);
+    
+            if (clock.timeLeft <= 0) {
+    
+                console.log(clock.timeLeft <= 0);
+    
+                clearInterval(interval);
+                
+    
+                return isItPSLSeason = clock.timeLeft <= 0;
+            }
+        }, 1000);
+    
+    }
+
+
+    
+
+    initClock('August 28 2017');
+
+
+    console.log(isItPSLSeason);
+
+
+    const yupOrNope = isItPSLSeason ? 'yup' : 'nope';
+    const yupOrNopeText = isItPSLSeason ? 'YASSS!' : 'Not Yet';
+
+
     const addMapToDOM = () => {
-        const $text = $('<h4>Your nearest PSL</h4>').addClass('text-center');
+        const $text = $('<h4>Better go get you one. Here\'s your nearest PSL</h4>').addClass('text-center');
         const $map = $('<div></div>').addClass('map').attr('id', 'map');
         $map.insertAfter($('.page-container'));
         $text.insertAfter($('.page-container'));
     }
 
-    if ( isItPSLSeason ) {
-        addMapToDOM();
+    const addCountDownToDOM = () => {
+        const $clockWrap = $('<div></div>').attr('id', 'countdown');
+        const $clockText = $('<h4>But soon</h4>').addClass('medium-text');
+
+        $clockWrap.insertAfter('.main-text');
+        $clockText.insertAfter('.main-text');
     }
+
+
 
     if (localStorage.getItem('pos') && isItPSLSeason) {
 
         initMap(JSON.parse(localStorage.getItem('pos')));
 
     } else if (isItPSLSeason) {
+        console.log('yup!');
         if ('geolocation' in navigator) {
             
             let location = navigator.geolocation.getCurrentPosition(function(pos) {
@@ -53,7 +111,12 @@ $('document').ready(function() {
             });
         } 
     }
+
+
+    // initClock('clock', '2017-08-30');
+    
 });
+
 
 
 

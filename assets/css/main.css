@@ -638,8 +638,11 @@ strong {
 .huge {
   margin-top: 50px;
   margin-bottom: 50px;
-  font-size: 7.8125rem; }
+  font-size: 5.3125rem; }
   @media (min-width: 700px) {
+    .huge {
+      font-size: 11.875rem; } }
+  @media (min-width: 980px) {
     .huge {
       font-size: 14.0625rem; } }
 
