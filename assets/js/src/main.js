@@ -1,106 +1,169 @@
 'use strict';
 
 import $ from 'jquery';
+import ee from 'event-emitter';
 
-const localStorage = window.localStorage;
+class CountdownClock {
 
+    constructor(time) {
+        this.timeLeft = null;
+        this.isInSeason = false;
+        this.deadline = time;
+        this.addCountToDom = false;
+    }
 
+    init() {
+        this.initClock();
+    }
 
-
-
-
-$('document').ready(function() {
-
-    let isItPSLSeason = null;
-    const $text = $('.main-text');
-
-    $text.text(yupOrNopeText);
-    $text.addClass(yupOrNope);
-
-
-    const countDown = (endTime) => {
-        
+    countdown() {
         let now = new Date();
-    
-        let time = Date.parse(endTime) - Date.parse(now);
-    
-        return {
-            'timeLeft': time
-        };
-    }
         
-    const initClock = (time) => {
-    
-        let i = 0;
-        const interval = setInterval(function() {
-    
-            let clock = countDown(time);
-    
-            console.log(clock.timeLeft <= 0);
-    
-            if (clock.timeLeft <= 0) {
-    
-                console.log(clock.timeLeft <= 0);
-    
-                clearInterval(interval);
-                
-    
-                return isItPSLSeason = clock.timeLeft <= 0;
-            }
-        }, 1000);
-    
+        this.addCountdownToDom((Date.parse(this.deadline) - Date.parse(now)));
+
+        return this.timeLeft = (Date.parse(this.deadline) - Date.parse(now));
     }
 
+    addCountdownToDom(timeLeft) {
+        let countEl;
 
-    
+        if (!this.addCountToDom) {
 
-    initClock('August 28 2017');
+            countEl = document.createElement('div');
+            countEl.className += 'countdown';
 
-
-    console.log(isItPSLSeason);
-
-
-    const yupOrNope = isItPSLSeason ? 'yup' : 'nope';
-    const yupOrNopeText = isItPSLSeason ? 'YASSS!' : 'Not Yet';
-
-
-    const addMapToDOM = () => {
-        const $text = $('<h4>Better go get you one. Here\'s your nearest PSL</h4>').addClass('text-center');
-        const $map = $('<div></div>').addClass('map').attr('id', 'map');
-        $map.insertAfter($('.page-container'));
-        $text.insertAfter($('.page-container'));
-    }
-
-    const addCountDownToDOM = () => {
-        const $clockWrap = $('<div></div>').attr('id', 'countdown');
-        const $clockText = $('<h4>But soon</h4>').addClass('medium-text');
-
-        $clockWrap.insertAfter('.main-text');
-        $clockText.insertAfter('.main-text');
-    }
-
-
-
-    if (localStorage.getItem('pos') && isItPSLSeason) {
-
-        initMap(JSON.parse(localStorage.getItem('pos')));
-
-    } else if (isItPSLSeason) {
-        console.log('yup!');
-        if ('geolocation' in navigator) {
+            const countdownTitle = document.createElement('h3');
+            countdownTitle.className += 'medium-text orange';
+            countdownTitle.innerHTML = 'But the PSL will bere here soon';
             
-            let location = navigator.geolocation.getCurrentPosition(function(pos) {
+            document.querySelector('.page-container').appendChild(countdownTitle);
+            document.querySelector('.page-container').appendChild(countEl);
+        } else {
+            countEl = document.querySelector('.countdown');
+        }
+
+        countEl.innerHTML = timeLeft;
+
+        this.addCountToDom = true;
+    }
+
+    removeCountdownFromDom() {
+        const countEl = document.querySelector('.countdown');
+
+        if (countEl) {
+            countEl.innerHTML = '';
+            countEl.remove();
+        }
+        
+    }
+
+    hasDeadlineBeenHit() {
+        return this.timeLeft <= 0;
+    }
+
+    initClock() {
+        const interval = setInterval(() => {
+    
+            let clock = this.countdown();
+
+            console.log(clock);
+
+            if (this.hasDeadlineBeenHit()) {
+
+                this.isInSeason = true;
+                
+                this.emit('season:open', this.isInSeason);
+                
+                this.removeCountdownFromDom();
+                
+                clearInterval(interval);
+
+            } else {
+
+                this.emit('season:close', this.isInSeason);
+                
+            }
+
+        }, 1000);
+    }
+
+}
+
+class pslAPP {
+
+    constructor() {
+        this.text = document.querySelector('.main-text');
+        this.pageContainer = document.querySelector('.page-container');
+        this.isOpen = null;
+        this.mapInit = false;
+        this.userLocation = false;
+        this.headlineSet = false;
+    }
+
+    seasonOpened() {
+        let hasBeenSet;
+
+        if (hasBeenSet) return false;
+        this.setHeadlineText(true);
+        this.addMap();
+
+        hasBeenSet = true;
+
+    }   
+
+    seasonClosed() {
+        console.log('closed!');
+        this.setHeadlineText(false);
+    }
+
+    setHeadlineText(isOpen) {
+        let hasBeenSet;
+
+        isOpen ? this.text.innerHTML = 'YASSS!' : this.text.innerHTML = 'Not Yet';
+        
+        if (hasBeenSet) false;
+        let textClass = isOpen ? 'yup': 'nope';
+        this.text.className += ' ' + textClass;
+    }
+
+    addMap() {
+        if (this.mapInit) return;
+        const map = document.createElement('div');
+        map.className += 'map';
+        map.id = 'map';
+        
+        const mapHeadline = document.createElement('h4');
+        mapHeadline.className += ' text-center';
+        mapHeadline.innerHTML = 'Better go get you one. Here\'s your nearest PSL';
+
+        this.pageContainer.appendChild(mapHeadline);
+        this.pageContainer.appendChild(map);
+
+        this.storeLocation();
+
+        this.mapInit = true;
+    }
+
+    storeLocation() {
+        const localStorage = window.localStorage;
+
+        if ('geolocation' in navigator) {
+
+            this.userLocation = navigator.geolocation.getCurrentPosition(function(pos) {
                 
                 const coords = {
                     lat: pos.coords.latitude,
                     lng: pos.coords.longitude
                 };
-                    
+
+                console.log(coords);
+
                 localStorage.setItem('pos', JSON.stringify(coords));
 
-                if (isItPSLSeason) {
-                    initMap(coords);
-                }
+
+
+                const googleMap = new Map(coords);
+                googleMap.init();
     
             }, function(err) {
                 console.log(err);
@@ -112,116 +175,138 @@ $('document').ready(function() {
         } 
     }
 
+}
 
-    // initClock('clock', '2017-08-30');
+class Map {
     
+    constructor(coords) {
+        this.coords = coords;
+        this.map;
+        this.service;
+        this.infoWindow;
+        this.mapDidRun;
+        this.marker;
+
+        this.that = this;
+        console.log(this);
+    }
+
+    searchCallback(results, status) {
+
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
+            
+            results.map((curVal, index) => {
+                this.createMarker(curVal, false);
+            })
+        }
+    }
+
+
+    createMarker(place, youAreHere) {
+        let here = youAreHere;
+        
+        const hereMarker = {
+            path: 'M 0,0 C -2,-20 -10,-22 -10,-30 A 10,10 0 1,1 10,-30 C 10,-22 2,-20 0,0 z',
+            fillColor: here ? '#c0392b' : '#00704a',
+            fillOpacity: 1,
+            strokeWeight: 0,
+            scale: 1
+        };
+    
+        this.marker = new google.maps.Marker({
+            map: this.map, 
+            position: here ? place : place.geometry.location,
+            icon: hereMarker
+        });
+    
+        google.maps.event.addListener(this.marker, 'click', () => {
+    
+            if (here) {
+                this.infoWindow.setContent(this.markerHTML(place, here));
+                this.infoWindow.open(this.map, this);
+            } else {
+                this.service.getDetails({
+                    placeId: place.place_id
+                }, (place, status) => {
+                    this.infoWindow.setContent(this.markerHTML(place, here));
+                    this.infoWindow.open(this.map, this);
+                });
+            }
+        });
+    }
+
+    markerHTML(youAreHere) {
+        if (youAreHere) {
+            return `<div class="store-wrap here-now"></div>
+            <div class="here text-center">You are here now.</div>
+            <p class="text-center">This might be a good time to reflect on your life choices.</p>
+        </div>`;
+        } else {
+            let open_now = place.opening_hours.open_now ? 'yup' : 'nope';
+            let open_now_text = place.opening_hours.open_now ? 'Open' : 'Close';
+            
+                return `<div class="store-wrap">
+                            <div class="small-text ${open_now}">${open_now_text}</div>
+                            <div class="name">${place.name} - ${place.rating} Stars</div>
+                            <div class="address">${place.formatted_address}</div>
+                            <ul class="hours">
+                                ${place.opening_hours.weekday_text.map( (hour) => {
+                                    return `<li>${hour}</li>`;
+                                } ).join('')}
+                            </ul>
+                        </div>`;
+        }
+    }
+
+    recenterMap() {
+        console.log(this);
+        if (!this.mapDidRun) return false;
+
+        let center = this.map.getCenter();
+        google.maps.event.trigger(this.map, "resize");
+        this.map.setCenter(center); 
+    }
+
+    init(){
+
+        this.map = new google.maps.Map(document.getElementById('map'), {
+            center: this.coords,
+            zoom: 15,
+            scrollwheel: false
+        });
+    
+        this.service = new google.maps.places.PlacesService(map);
+        this.infoWindow = new google.maps.InfoWindow();
+        
+        let youAreHere = this.createMarker(this.coords, true);
+
+        this.service.nearbySearch({
+            location: this.coords, 
+            radius: 500,
+            name: 'Starbucks'
+        }, this.searchCallback);
+    
+        this.mapDidRun = true;
+
+        google.maps.event.addDomListener(window, 'resize', this.recenterMap);
+    }
+
+}
+
+
+ee(CountdownClock.prototype);
+
+const countDown = new CountdownClock('August 28, 2017 08:33:00');
+const app = new pslAPP;
+
+countDown.init();
+
+countDown.on('season:close', function(val) {
+    app.seasonClosed();
 });
 
+countDown.on('season:open', function(val) {
+    app.seasonOpened();
+})
 
 
-
-let map;
-let service;
-let infowindow;
-let mapDidRun = false;
-
-const searchCallback = (results, status) => {
-    if (status === google.maps.places.PlacesServiceStatus.OK) {
-        
-        results.map((curVal, index) => {
-            createMarker(results[index], false);
-        })
-    }
-}
-
-const createMarker = (place, youAreHere) => {
-
-    let here = youAreHere;
-
-    const hereMarker = {
-        path: 'M 0,0 C -2,-20 -10,-22 -10,-30 A 10,10 0 1,1 10,-30 C 10,-22 2,-20 0,0 z',
-        fillColor: here ? '#c0392b' : '#00704a',
-        fillOpacity: 1,
-        strokeWeight: 0,
-        scale: 1
-      };
-
-    let marker = new google.maps.Marker({
-        map: map, 
-        position: here ? place : place.geometry.location,
-        icon: hereMarker
-    });
-
-    google.maps.event.addListener(marker, 'click', function() {
-
-        if (here) {
-            infowindow.setContent(markerHTML(place, here));
-            infowindow.open(map, this);
-        } else {
-            service.getDetails({
-                placeId: place.place_id
-            }, (place, status) => {
-                infowindow.setContent(markerHTML(place, here));
-                infowindow.open(map, this);
-            });
-        }
-    })
-};
-
-const markerHTML = (place, youAreHere) => {
-    if (youAreHere) {
-        return `<div class="store-wrap here-now"></div>
-        <div class="here text-center">You are here now.</div>
-        <p class="text-center">This might be a good time to reflect on your life choices.</p>
-    </div>`;
-    } else {
-        let open_now = place.opening_hours.open_now ? 'yup' : 'nope';
-        let open_now_text = place.opening_hours.open_now ? 'Open' : 'Close';
-        
-            return `<div class="store-wrap">
-                        <div class="small-text ${open_now}">${open_now_text}</div>
-                        <div class="name">${place.name} - ${place.rating} Stars</div>
-                        <div class="address">${place.formatted_address}</div>
-                        <ul class="hours">
-                            ${place.opening_hours.weekday_text.map( (hour) => {
-                                return `<li>${hour}</li>`;
-                            } ).join('')}
-                        </ul>
-                    </div>`;
-    }
-};
-
-
-const initMap = (coords) => {
-
-    map = new google.maps.Map(document.getElementById('map'), {
-        center: coords,
-        zoom: 15,
-        scrollwheel: false
-    });
-
-    service = new google.maps.places.PlacesService(map);
-
-    infowindow = new google.maps.InfoWindow();
-
-    let youAreHere = createMarker(coords, true);
-
-    service.nearbySearch({
-        location: coords, 
-        radius: 500,
-        name: 'Starbucks'
-    }, searchCallback);
-
-    
-
-    mapDidRun = true;
-}  
-
-const recenterMap = () => {
-    if (!mapDidRun) return false;
-    let center = map.getCenter();
-    google.maps.event.trigger(map, "resize");
-    map.setCenter(center); 
-}
-
-google.maps.event.addDomListener(window, 'resize', recenterMap);

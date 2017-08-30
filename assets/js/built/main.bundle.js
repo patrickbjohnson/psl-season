@@ -46,200 +46,338 @@
 
 	'use strict';
 	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
 	var _jquery = __webpack_require__(1);
 	
 	var _jquery2 = _interopRequireDefault(_jquery);
 	
+	var _eventEmitter = __webpack_require__(2);
+	
+	var _eventEmitter2 = _interopRequireDefault(_eventEmitter);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var localStorage = window.localStorage;
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	(0, _jquery2.default)('document').ready(function () {
+	var CountdownClock = function () {
+	    function CountdownClock(time) {
+	        _classCallCheck(this, CountdownClock);
 	
-	    var isItPSLSeason = null;
-	    var $text = (0, _jquery2.default)('.main-text');
-	
-	    $text.text(yupOrNopeText);
-	    $text.addClass(yupOrNope);
-	
-	    var countDown = function countDown(endTime) {
-	
-	        var now = new Date();
-	
-	        var time = Date.parse(endTime) - Date.parse(now);
-	
-	        return {
-	            'timeLeft': time
-	        };
-	    };
-	
-	    var initClock = function initClock(time) {
-	
-	        var i = 0;
-	        var interval = setInterval(function () {
-	
-	            var clock = countDown(time);
-	
-	            console.log(clock.timeLeft <= 0);
-	
-	            if (clock.timeLeft <= 0) {
-	
-	                console.log(clock.timeLeft <= 0);
-	
-	                clearInterval(interval);
-	
-	                return isItPSLSeason = clock.timeLeft <= 0;
-	            }
-	        }, 1000);
-	    };
-	
-	    initClock('August 28 2017');
-	
-	    console.log(isItPSLSeason);
-	
-	    var yupOrNope = isItPSLSeason ? 'yup' : 'nope';
-	    var yupOrNopeText = isItPSLSeason ? 'YASSS!' : 'Not Yet';
-	
-	    var addMapToDOM = function addMapToDOM() {
-	        var $text = (0, _jquery2.default)('<h4>Better go get you one. Here\'s your nearest PSL</h4>').addClass('text-center');
-	        var $map = (0, _jquery2.default)('<div></div>').addClass('map').attr('id', 'map');
-	        $map.insertAfter((0, _jquery2.default)('.page-container'));
-	        $text.insertAfter((0, _jquery2.default)('.page-container'));
-	    };
-	
-	    var addCountDownToDOM = function addCountDownToDOM() {
-	        var $clockWrap = (0, _jquery2.default)('<div></div>').attr('id', 'countdown');
-	        var $clockText = (0, _jquery2.default)('<h4>But soon</h4>').addClass('medium-text');
-	
-	        $clockWrap.insertAfter('.main-text');
-	        $clockText.insertAfter('.main-text');
-	    };
-	
-	    if (localStorage.getItem('pos') && isItPSLSeason) {
-	
-	        initMap(JSON.parse(localStorage.getItem('pos')));
-	    } else if (isItPSLSeason) {
-	        console.log('yup!');
-	        if ('geolocation' in navigator) {
-	
-	            var location = navigator.geolocation.getCurrentPosition(function (pos) {
-	
-	                var coords = {
-	                    lat: pos.coords.latitude,
-	                    lng: pos.coords.longitude
-	                };
-	
-	                localStorage.setItem('pos', JSON.stringify(coords));
-	
-	                if (isItPSLSeason) {
-	                    initMap(coords);
-	                }
-	            }, function (err) {
-	                console.log(err);
-	            }, {
-	                enableHighAccuracy: true,
-	                timeout: 5000,
-	                maximumAge: 0
-	            });
-	        }
+	        this.timeLeft = null;
+	        this.isInSeason = false;
+	        this.deadline = time;
+	        this.addCountToDom = false;
 	    }
 	
-	    // initClock('clock', '2017-08-30');
+	    _createClass(CountdownClock, [{
+	        key: 'init',
+	        value: function init() {
+	            this.initClock();
+	        }
+	    }, {
+	        key: 'countdown',
+	        value: function countdown() {
+	            var now = new Date();
+	
+	            this.addCountdownToDom(Date.parse(this.deadline) - Date.parse(now));
+	
+	            return this.timeLeft = Date.parse(this.deadline) - Date.parse(now);
+	        }
+	    }, {
+	        key: 'addCountdownToDom',
+	        value: function addCountdownToDom(timeLeft) {
+	            var countEl = void 0;
+	
+	            if (!this.addCountToDom) {
+	
+	                countEl = document.createElement('div');
+	                countEl.className += 'countdown';
+	
+	                var countdownTitle = document.createElement('h3');
+	                countdownTitle.className += 'medium-text orange';
+	                countdownTitle.innerHTML = 'But the PSL will bere here soon';
+	
+	                document.querySelector('.page-container').appendChild(countdownTitle);
+	                document.querySelector('.page-container').appendChild(countEl);
+	            } else {
+	                countEl = document.querySelector('.countdown');
+	            }
+	
+	            countEl.innerHTML = timeLeft;
+	
+	            this.addCountToDom = true;
+	        }
+	    }, {
+	        key: 'removeCountdownFromDom',
+	        value: function removeCountdownFromDom() {
+	            var countEl = document.querySelector('.countdown');
+	
+	            if (countEl) {
+	                countEl.innerHTML = '';
+	                countEl.remove();
+	            }
+	        }
+	    }, {
+	        key: 'hasDeadlineBeenHit',
+	        value: function hasDeadlineBeenHit() {
+	            return this.timeLeft <= 0;
+	        }
+	    }, {
+	        key: 'initClock',
+	        value: function initClock() {
+	            var _this = this;
+	
+	            var interval = setInterval(function () {
+	
+	                var clock = _this.countdown();
+	
+	                console.log(clock);
+	
+	                if (_this.hasDeadlineBeenHit()) {
+	
+	                    _this.isInSeason = true;
+	
+	                    _this.emit('season:open', _this.isInSeason);
+	
+	                    _this.removeCountdownFromDom();
+	
+	                    clearInterval(interval);
+	                } else {
+	
+	                    _this.emit('season:close', _this.isInSeason);
+	                }
+	            }, 1000);
+	        }
+	    }]);
+	
+	    return CountdownClock;
+	}();
+	
+	var pslAPP = function () {
+	    function pslAPP() {
+	        _classCallCheck(this, pslAPP);
+	
+	        this.text = document.querySelector('.main-text');
+	        this.pageContainer = document.querySelector('.page-container');
+	        this.isOpen = null;
+	        this.mapInit = false;
+	        this.userLocation = false;
+	        this.headlineSet = false;
+	    }
+	
+	    _createClass(pslAPP, [{
+	        key: 'seasonOpened',
+	        value: function seasonOpened() {
+	            var hasBeenSet = void 0;
+	
+	            if (hasBeenSet) return false;
+	            this.setHeadlineText(true);
+	            this.addMap();
+	
+	            hasBeenSet = true;
+	        }
+	    }, {
+	        key: 'seasonClosed',
+	        value: function seasonClosed() {
+	            console.log('closed!');
+	            this.setHeadlineText(false);
+	        }
+	    }, {
+	        key: 'setHeadlineText',
+	        value: function setHeadlineText(isOpen) {
+	            var hasBeenSet = void 0;
+	
+	            isOpen ? this.text.innerHTML = 'YASSS!' : this.text.innerHTML = 'Not Yet';
+	
+	            if (hasBeenSet) false;
+	            var textClass = isOpen ? 'yup' : 'nope';
+	            this.text.className += ' ' + textClass;
+	        }
+	    }, {
+	        key: 'addMap',
+	        value: function addMap() {
+	            if (this.mapInit) return;
+	            var map = document.createElement('div');
+	            map.className += 'map';
+	            map.id = 'map';
+	
+	            var mapHeadline = document.createElement('h4');
+	            mapHeadline.className += ' text-center';
+	            mapHeadline.innerHTML = 'Better go get you one. Here\'s your nearest PSL';
+	
+	            this.pageContainer.appendChild(mapHeadline);
+	            this.pageContainer.appendChild(map);
+	
+	            this.storeLocation();
+	
+	            this.mapInit = true;
+	        }
+	    }, {
+	        key: 'storeLocation',
+	        value: function storeLocation() {
+	            var localStorage = window.localStorage;
+	
+	            if ('geolocation' in navigator) {
+	
+	                this.userLocation = navigator.geolocation.getCurrentPosition(function (pos) {
+	
+	                    var coords = {
+	                        lat: pos.coords.latitude,
+	                        lng: pos.coords.longitude
+	                    };
+	
+	                    console.log(coords);
+	
+	                    localStorage.setItem('pos', JSON.stringify(coords));
+	
+	                    var googleMap = new Map(coords);
+	                    googleMap.init();
+	                }, function (err) {
+	                    console.log(err);
+	                }, {
+	                    enableHighAccuracy: true,
+	                    timeout: 5000,
+	                    maximumAge: 0
+	                });
+	            }
+	        }
+	    }]);
+	
+	    return pslAPP;
+	}();
+	
+	var Map = function () {
+	    function Map(coords) {
+	        _classCallCheck(this, Map);
+	
+	        this.coords = coords;
+	        this.map;
+	        this.service;
+	        this.infoWindow;
+	        this.mapDidRun;
+	        this.marker;
+	
+	        this.that = this;
+	        console.log(this);
+	    }
+	
+	    _createClass(Map, [{
+	        key: 'searchCallback',
+	        value: function searchCallback(results, status) {
+	            var _this2 = this;
+	
+	            if (status === google.maps.places.PlacesServiceStatus.OK) {
+	
+	                results.map(function (curVal, index) {
+	                    _this2.createMarker(curVal, false);
+	                });
+	            }
+	        }
+	    }, {
+	        key: 'createMarker',
+	        value: function createMarker(place, youAreHere) {
+	            var _this3 = this;
+	
+	            var here = youAreHere;
+	
+	            var hereMarker = {
+	                path: 'M 0,0 C -2,-20 -10,-22 -10,-30 A 10,10 0 1,1 10,-30 C 10,-22 2,-20 0,0 z',
+	                fillColor: here ? '#c0392b' : '#00704a',
+	                fillOpacity: 1,
+	                strokeWeight: 0,
+	                scale: 1
+	            };
+	
+	            this.marker = new google.maps.Marker({
+	                map: this.map,
+	                position: here ? place : place.geometry.location,
+	                icon: hereMarker
+	            });
+	
+	            google.maps.event.addListener(this.marker, 'click', function () {
+	
+	                if (here) {
+	                    _this3.infoWindow.setContent(_this3.markerHTML(place, here));
+	                    _this3.infoWindow.open(_this3.map, _this3);
+	                } else {
+	                    _this3.service.getDetails({
+	                        placeId: place.place_id
+	                    }, function (place, status) {
+	                        _this3.infoWindow.setContent(_this3.markerHTML(place, here));
+	                        _this3.infoWindow.open(_this3.map, _this3);
+	                    });
+	                }
+	            });
+	        }
+	    }, {
+	        key: 'markerHTML',
+	        value: function markerHTML(youAreHere) {
+	            if (youAreHere) {
+	                return '<div class="store-wrap here-now"></div>\n            <div class="here text-center">You are here now.</div>\n            <p class="text-center">This might be a good time to reflect on your life choices.</p>\n        </div>';
+	            } else {
+	                var open_now = place.opening_hours.open_now ? 'yup' : 'nope';
+	                var open_now_text = place.opening_hours.open_now ? 'Open' : 'Close';
+	
+	                return '<div class="store-wrap">\n                            <div class="small-text ' + open_now + '">' + open_now_text + '</div>\n                            <div class="name">' + place.name + ' - ' + place.rating + ' Stars</div>\n                            <div class="address">' + place.formatted_address + '</div>\n                            <ul class="hours">\n                                ' + place.opening_hours.weekday_text.map(function (hour) {
+	                    return '<li>' + hour + '</li>';
+	                }).join('') + '\n                            </ul>\n                        </div>';
+	            }
+	        }
+	    }, {
+	        key: 'recenterMap',
+	        value: function recenterMap() {
+	            console.log(this);
+	            if (!this.mapDidRun) return false;
+	
+	            var center = this.map.getCenter();
+	            google.maps.event.trigger(this.map, "resize");
+	            this.map.setCenter(center);
+	        }
+	    }, {
+	        key: 'init',
+	        value: function init() {
+	
+	            this.map = new google.maps.Map(document.getElementById('map'), {
+	                center: this.coords,
+	                zoom: 15,
+	                scrollwheel: false
+	            });
+	
+	            this.service = new google.maps.places.PlacesService(map);
+	            this.infoWindow = new google.maps.InfoWindow();
+	
+	            var youAreHere = this.createMarker(this.coords, true);
+	
+	            this.service.nearbySearch({
+	                location: this.coords,
+	                radius: 500,
+	                name: 'Starbucks'
+	            }, this.searchCallback);
+	
+	            this.mapDidRun = true;
+	
+	            google.maps.event.addDomListener(window, 'resize', this.recenterMap);
+	        }
+	    }]);
+	
+	    return Map;
+	}();
+	
+	(0, _eventEmitter2.default)(CountdownClock.prototype);
+	
+	var countDown = new CountdownClock('August 28, 2017 08:33:00');
+	var app = new pslAPP();
+	
+	countDown.init();
+	
+	countDown.on('season:close', function (val) {
+	    app.seasonClosed();
 	});
 	
-	var map = void 0;
-	var service = void 0;
-	var infowindow = void 0;
-	var mapDidRun = false;
-	
-	var searchCallback = function searchCallback(results, status) {
-	    if (status === google.maps.places.PlacesServiceStatus.OK) {
-	
-	        results.map(function (curVal, index) {
-	            createMarker(results[index], false);
-	        });
-	    }
-	};
-	
-	var createMarker = function createMarker(place, youAreHere) {
-	
-	    var here = youAreHere;
-	
-	    var hereMarker = {
-	        path: 'M 0,0 C -2,-20 -10,-22 -10,-30 A 10,10 0 1,1 10,-30 C 10,-22 2,-20 0,0 z',
-	        fillColor: here ? '#c0392b' : '#00704a',
-	        fillOpacity: 1,
-	        strokeWeight: 0,
-	        scale: 1
-	    };
-	
-	    var marker = new google.maps.Marker({
-	        map: map,
-	        position: here ? place : place.geometry.location,
-	        icon: hereMarker
-	    });
-	
-	    google.maps.event.addListener(marker, 'click', function () {
-	        var _this = this;
-	
-	        if (here) {
-	            infowindow.setContent(markerHTML(place, here));
-	            infowindow.open(map, this);
-	        } else {
-	            service.getDetails({
-	                placeId: place.place_id
-	            }, function (place, status) {
-	                infowindow.setContent(markerHTML(place, here));
-	                infowindow.open(map, _this);
-	            });
-	        }
-	    });
-	};
-	
-	var markerHTML = function markerHTML(place, youAreHere) {
-	    if (youAreHere) {
-	        return '<div class="store-wrap here-now"></div>\n        <div class="here text-center">You are here now.</div>\n        <p class="text-center">This might be a good time to reflect on your life choices.</p>\n    </div>';
-	    } else {
-	        var open_now = place.opening_hours.open_now ? 'yup' : 'nope';
-	        var open_now_text = place.opening_hours.open_now ? 'Open' : 'Close';
-	
-	        return '<div class="store-wrap">\n                        <div class="small-text ' + open_now + '">' + open_now_text + '</div>\n                        <div class="name">' + place.name + ' - ' + place.rating + ' Stars</div>\n                        <div class="address">' + place.formatted_address + '</div>\n                        <ul class="hours">\n                            ' + place.opening_hours.weekday_text.map(function (hour) {
-	            return '<li>' + hour + '</li>';
-	        }).join('') + '\n                        </ul>\n                    </div>';
-	    }
-	};
-	
-	var initMap = function initMap(coords) {
-	
-	    map = new google.maps.Map(document.getElementById('map'), {
-	        center: coords,
-	        zoom: 15,
-	        scrollwheel: false
-	    });
-	
-	    service = new google.maps.places.PlacesService(map);
-	
-	    infowindow = new google.maps.InfoWindow();
-	
-	    var youAreHere = createMarker(coords, true);
-	
-	    service.nearbySearch({
-	        location: coords,
-	        radius: 500,
-	        name: 'Starbucks'
-	    }, searchCallback);
-	
-	    mapDidRun = true;
-	};
-	
-	var recenterMap = function recenterMap() {
-	    if (!mapDidRun) return false;
-	    var center = map.getCenter();
-	    google.maps.event.trigger(map, "resize");
-	    map.setCenter(center);
-	};
-	
-	google.maps.event.addDomListener(window, 'resize', recenterMap);
+	countDown.on('season:open', function (val) {
+	    app.seasonOpened();
+	});
 
 /***/ }),
 /* 1 */
@@ -10498,6 +10636,436 @@
 	
 	return jQuery;
 	} );
+
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var d        = __webpack_require__(3)
+	  , callable = __webpack_require__(18)
+	
+	  , apply = Function.prototype.apply, call = Function.prototype.call
+	  , create = Object.create, defineProperty = Object.defineProperty
+	  , defineProperties = Object.defineProperties
+	  , hasOwnProperty = Object.prototype.hasOwnProperty
+	  , descriptor = { configurable: true, enumerable: false, writable: true }
+	
+	  , on, once, off, emit, methods, descriptors, base;
+	
+	on = function (type, listener) {
+		var data;
+	
+		callable(listener);
+	
+		if (!hasOwnProperty.call(this, '__ee__')) {
+			data = descriptor.value = create(null);
+			defineProperty(this, '__ee__', descriptor);
+			descriptor.value = null;
+		} else {
+			data = this.__ee__;
+		}
+		if (!data[type]) data[type] = listener;
+		else if (typeof data[type] === 'object') data[type].push(listener);
+		else data[type] = [data[type], listener];
+	
+		return this;
+	};
+	
+	once = function (type, listener) {
+		var once, self;
+	
+		callable(listener);
+		self = this;
+		on.call(this, type, once = function () {
+			off.call(self, type, once);
+			apply.call(listener, this, arguments);
+		});
+	
+		once.__eeOnceListener__ = listener;
+		return this;
+	};
+	
+	off = function (type, listener) {
+		var data, listeners, candidate, i;
+	
+		callable(listener);
+	
+		if (!hasOwnProperty.call(this, '__ee__')) return this;
+		data = this.__ee__;
+		if (!data[type]) return this;
+		listeners = data[type];
+	
+		if (typeof listeners === 'object') {
+			for (i = 0; (candidate = listeners[i]); ++i) {
+				if ((candidate === listener) ||
+						(candidate.__eeOnceListener__ === listener)) {
+					if (listeners.length === 2) data[type] = listeners[i ? 0 : 1];
+					else listeners.splice(i, 1);
+				}
+			}
+		} else {
+			if ((listeners === listener) ||
+					(listeners.__eeOnceListener__ === listener)) {
+				delete data[type];
+			}
+		}
+	
+		return this;
+	};
+	
+	emit = function (type) {
+		var i, l, listener, listeners, args;
+	
+		if (!hasOwnProperty.call(this, '__ee__')) return;
+		listeners = this.__ee__[type];
+		if (!listeners) return;
+	
+		if (typeof listeners === 'object') {
+			l = arguments.length;
+			args = new Array(l - 1);
+			for (i = 1; i < l; ++i) args[i - 1] = arguments[i];
+	
+			listeners = listeners.slice();
+			for (i = 0; (listener = listeners[i]); ++i) {
+				apply.call(listener, this, args);
+			}
+		} else {
+			switch (arguments.length) {
+			case 1:
+				call.call(listeners, this);
+				break;
+			case 2:
+				call.call(listeners, this, arguments[1]);
+				break;
+			case 3:
+				call.call(listeners, this, arguments[1], arguments[2]);
+				break;
+			default:
+				l = arguments.length;
+				args = new Array(l - 1);
+				for (i = 1; i < l; ++i) {
+					args[i - 1] = arguments[i];
+				}
+				apply.call(listeners, this, args);
+			}
+		}
+	};
+	
+	methods = {
+		on: on,
+		once: once,
+		off: off,
+		emit: emit
+	};
+	
+	descriptors = {
+		on: d(on),
+		once: d(once),
+		off: d(off),
+		emit: d(emit)
+	};
+	
+	base = defineProperties({}, descriptors);
+	
+	module.exports = exports = function (o) {
+		return (o == null) ? create(base) : defineProperties(Object(o), descriptors);
+	};
+	exports.methods = methods;
+
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var assign        = __webpack_require__(4)
+	  , normalizeOpts = __webpack_require__(13)
+	  , isCallable    = __webpack_require__(14)
+	  , contains      = __webpack_require__(15)
+	
+	  , d;
+	
+	d = module.exports = function (dscr, value/*, options*/) {
+		var c, e, w, options, desc;
+		if ((arguments.length < 2) || (typeof dscr !== 'string')) {
+			options = value;
+			value = dscr;
+			dscr = null;
+		} else {
+			options = arguments[2];
+		}
+		if (dscr == null) {
+			c = w = true;
+			e = false;
+		} else {
+			c = contains.call(dscr, 'c');
+			e = contains.call(dscr, 'e');
+			w = contains.call(dscr, 'w');
+		}
+	
+		desc = { value: value, configurable: c, enumerable: e, writable: w };
+		return !options ? desc : assign(normalizeOpts(options), desc);
+	};
+	
+	d.gs = function (dscr, get, set/*, options*/) {
+		var c, e, options, desc;
+		if (typeof dscr !== 'string') {
+			options = set;
+			set = get;
+			get = dscr;
+			dscr = null;
+		} else {
+			options = arguments[3];
+		}
+		if (get == null) {
+			get = undefined;
+		} else if (!isCallable(get)) {
+			options = get;
+			get = set = undefined;
+		} else if (set == null) {
+			set = undefined;
+		} else if (!isCallable(set)) {
+			options = set;
+			set = undefined;
+		}
+		if (dscr == null) {
+			c = true;
+			e = false;
+		} else {
+			c = contains.call(dscr, 'c');
+			e = contains.call(dscr, 'e');
+		}
+	
+		desc = { get: get, set: set, configurable: c, enumerable: e };
+		return !options ? desc : assign(normalizeOpts(options), desc);
+	};
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	module.exports = __webpack_require__(5)()
+		? Object.assign
+		: __webpack_require__(6);
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports) {
+
+	"use strict";
+	
+	module.exports = function () {
+		var assign = Object.assign, obj;
+		if (typeof assign !== "function") return false;
+		obj = { foo: "raz" };
+		assign(obj, { bar: "dwa" }, { trzy: "trzy" });
+		return (obj.foo + obj.bar + obj.trzy) === "razdwatrzy";
+	};
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var keys  = __webpack_require__(7)
+	  , value = __webpack_require__(12)
+	  , max   = Math.max;
+	
+	module.exports = function (dest, src /*, …srcn*/) {
+		var error, i, length = max(arguments.length, 2), assign;
+		dest = Object(value(dest));
+		assign = function (key) {
+			try {
+				dest[key] = src[key];
+			} catch (e) {
+				if (!error) error = e;
+			}
+		};
+		for (i = 1; i < length; ++i) {
+			src = arguments[i];
+			keys(src).forEach(assign);
+		}
+		if (error !== undefined) throw error;
+		return dest;
+	};
+
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	module.exports = __webpack_require__(8)()
+		? Object.keys
+		: __webpack_require__(9);
+
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports) {
+
+	"use strict";
+	
+	module.exports = function () {
+		try {
+			Object.keys("primitive");
+			return true;
+		} catch (e) {
+	 return false;
+	}
+	};
+
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var isValue = __webpack_require__(10);
+	
+	var keys = Object.keys;
+	
+	module.exports = function (object) {
+		return keys(isValue(object) ? Object(object) : object);
+	};
+
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var _undefined = __webpack_require__(11)(); // Support ES3 engines
+	
+	module.exports = function (val) {
+	 return (val !== _undefined) && (val !== null);
+	};
+
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports) {
+
+	"use strict";
+	
+	// eslint-disable-next-line no-empty-function
+	module.exports = function () {};
+
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var isValue = __webpack_require__(10);
+	
+	module.exports = function (value) {
+		if (!isValue(value)) throw new TypeError("Cannot use null or undefined");
+		return value;
+	};
+
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var isValue = __webpack_require__(10);
+	
+	var forEach = Array.prototype.forEach, create = Object.create;
+	
+	var process = function (src, obj) {
+		var key;
+		for (key in src) obj[key] = src[key];
+	};
+	
+	// eslint-disable-next-line no-unused-vars
+	module.exports = function (opts1 /*, …options*/) {
+		var result = create(null);
+		forEach.call(arguments, function (options) {
+			if (!isValue(options)) return;
+			process(Object(options), result);
+		});
+		return result;
+	};
+
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports) {
+
+	// Deprecated
+	
+	"use strict";
+	
+	module.exports = function (obj) {
+	 return typeof obj === "function";
+	};
+
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	module.exports = __webpack_require__(16)()
+		? String.prototype.contains
+		: __webpack_require__(17);
+
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports) {
+
+	"use strict";
+	
+	var str = "razdwatrzy";
+	
+	module.exports = function () {
+		if (typeof str.contains !== "function") return false;
+		return (str.contains("dwa") === true) && (str.contains("foo") === false);
+	};
+
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports) {
+
+	"use strict";
+	
+	var indexOf = String.prototype.indexOf;
+	
+	module.exports = function (searchString/*, position*/) {
+		return indexOf.call(this, searchString, arguments[1]) > -1;
+	};
+
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports) {
+
+	"use strict";
+	
+	module.exports = function (fn) {
+		if (typeof fn !== "function") throw new TypeError(fn + " is not a function");
+		return fn;
+	};
 
 
 /***/ })

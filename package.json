@@ -22,6 +22,7 @@
     "lodash": "^4.8.2"
   },
   "dependencies": {
+    "event-emitter": "^0.3.5",
     "jquery": "^3.2.1",
     "svg4everybody": "^2.0.3"
   }
