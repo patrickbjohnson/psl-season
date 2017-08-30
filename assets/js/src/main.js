@@ -156,14 +156,19 @@ class pslAPP {
                     lng: pos.coords.longitude
                 };
 
-                console.log(coords);
+                let gm;
+                
+                if (localStorage.getItem('pos')) {
+                    console.log('alrady there');
+                    gm = new Map(coords);
+                } else {
+                    gm = new Map(coords);
+                }
 
                 localStorage.setItem('pos', JSON.stringify(coords));
 
-
-
-                const googleMap = new Map(coords);
-                googleMap.init();
+                gm.init();
+    
     
             }, function(err) {
                 console.log(err);
@@ -187,16 +192,16 @@ class Map {
         this.mapDidRun;
         this.marker;
 
-        this.that = this;
-        console.log(this);
+
     }
 
     searchCallback(results, status) {
-
+        console.log(this);
         if (status === google.maps.places.PlacesServiceStatus.OK) {
             
             results.map((curVal, index) => {
-                this.createMarker(curVal, false);
+
+                this.createMarker(results[index], false);
             })
         }
     }
@@ -219,12 +224,15 @@ class Map {
             icon: hereMarker
         });
     
-        google.maps.event.addListener(this.marker, 'click', () => {
-    
+        google.maps.event.addListener(this.marker, 'click', (e) => {
+            console.log(this.marker);
+            console.log(this.infoWindow);
+
             if (here) {
                 this.infoWindow.setContent(this.markerHTML(place, here));
                 this.infoWindow.open(this.map, this);
             } else {
+                console.log(place);
                 this.service.getDetails({
                     placeId: place.place_id
                 }, (place, status) => {
@@ -235,7 +243,8 @@ class Map {
         });
     }
 
-    markerHTML(youAreHere) {
+    markerHTML(place, youAreHere) {
+
         if (youAreHere) {
             return `<div class="store-wrap here-now"></div>
             <div class="here text-center">You are here now.</div>
@@ -259,7 +268,6 @@ class Map {
     }
 
     recenterMap() {
-        console.log(this);
         if (!this.mapDidRun) return false;
 
         let center = this.map.getCenter();
@@ -268,23 +276,24 @@ class Map {
     }
 
     init(){
-
+        
         this.map = new google.maps.Map(document.getElementById('map'), {
             center: this.coords,
             zoom: 15,
             scrollwheel: false
         });
     
-        this.service = new google.maps.places.PlacesService(map);
+        this.service = new google.maps.places.PlacesService(this.map);
         this.infoWindow = new google.maps.InfoWindow();
         
+        console.log(this.infoWindow);
         let youAreHere = this.createMarker(this.coords, true);
 
         this.service.nearbySearch({
             location: this.coords, 
             radius: 500,
             name: 'Starbucks'
-        }, this.searchCallback);
+        }, this.searchCallback.bind(this));
     
         this.mapDidRun = true;
 
@@ -307,6 +316,4 @@ countDown.on('season:close', function(val) {
 
 countDown.on('season:open', function(val) {
     app.seasonOpened();
-})
-
-
+});

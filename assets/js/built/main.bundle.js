@@ -227,12 +227,18 @@
 	                        lng: pos.coords.longitude
 	                    };
 	
-	                    console.log(coords);
+	                    var gm = void 0;
+	
+	                    if (localStorage.getItem('pos')) {
+	                        console.log('alrady there');
+	                        gm = new Map(coords);
+	                    } else {
+	                        gm = new Map(coords);
+	                    }
 	
 	                    localStorage.setItem('pos', JSON.stringify(coords));
 	
-	                    var googleMap = new Map(coords);
-	                    googleMap.init();
+	                    gm.init();
 	                }, function (err) {
 	                    console.log(err);
 	                }, {
@@ -257,9 +263,6 @@
 	        this.infoWindow;
 	        this.mapDidRun;
 	        this.marker;
-	
-	        this.that = this;
-	        console.log(this);
 	    }
 	
 	    _createClass(Map, [{
@@ -267,10 +270,12 @@
 	        value: function searchCallback(results, status) {
 	            var _this2 = this;
 	
+	            console.log(this);
 	            if (status === google.maps.places.PlacesServiceStatus.OK) {
 	
 	                results.map(function (curVal, index) {
-	                    _this2.createMarker(curVal, false);
+	
+	                    _this2.createMarker(results[index], false);
 	                });
 	            }
 	        }
@@ -295,12 +300,15 @@
 	                icon: hereMarker
 	            });
 	
-	            google.maps.event.addListener(this.marker, 'click', function () {
+	            google.maps.event.addListener(this.marker, 'click', function (e) {
+	                console.log(_this3.marker);
+	                console.log(_this3.infoWindow);
 	
 	                if (here) {
 	                    _this3.infoWindow.setContent(_this3.markerHTML(place, here));
 	                    _this3.infoWindow.open(_this3.map, _this3);
 	                } else {
+	                    console.log(place);
 	                    _this3.service.getDetails({
 	                        placeId: place.place_id
 	                    }, function (place, status) {
@@ -312,7 +320,8 @@
 	        }
 	    }, {
 	        key: 'markerHTML',
-	        value: function markerHTML(youAreHere) {
+	        value: function markerHTML(place, youAreHere) {
+	
 	            if (youAreHere) {
 	                return '<div class="store-wrap here-now"></div>\n            <div class="here text-center">You are here now.</div>\n            <p class="text-center">This might be a good time to reflect on your life choices.</p>\n        </div>';
 	            } else {
@@ -327,7 +336,6 @@
 	    }, {
 	        key: 'recenterMap',
 	        value: function recenterMap() {
-	            console.log(this);
 	            if (!this.mapDidRun) return false;
 	
 	            var center = this.map.getCenter();
@@ -344,16 +352,17 @@
 	                scrollwheel: false
 	            });
 	
-	            this.service = new google.maps.places.PlacesService(map);
+	            this.service = new google.maps.places.PlacesService(this.map);
 	            this.infoWindow = new google.maps.InfoWindow();
 	
+	            console.log(this.infoWindow);
 	            var youAreHere = this.createMarker(this.coords, true);
 	
 	            this.service.nearbySearch({
 	                location: this.coords,
 	                radius: 500,
 	                name: 'Starbucks'
-	            }, this.searchCallback);
+	            }, this.searchCallback.bind(this));
 	
 	            this.mapDidRun = true;
 	
